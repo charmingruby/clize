@@ -8,4 +8,6 @@ CLI for internal project team assignments communication, made using Go, SQLite, 
 
 > The **summary** of the features are listed below.
 
+- it should be able to auth
 - it should be able to registrate a new app
+- it should be able to create a new assignment
