@@ -1,6 +1,8 @@
 package apps
 
-import "github.com/charmingruby/clize/internal/exceptions"
+import (
+	"github.com/charmingruby/clize/internal/domain"
+)
 
 type App struct {
 	Name    string `json:"name"`
@@ -23,11 +25,11 @@ func NewApp(name, context string) (*App, error) {
 
 func (a *App) Validate() error {
 	if a.Name == "" {
-		return &exceptions.RequiredFieldError{FieldName: "name"}
+		return &domain.RequiredFieldError{FieldName: "name"}
 	}
 
 	if len(a.Name) < 4 {
-		return &exceptions.FieldLengthError{
+		return &domain.FieldLengthError{
 			IsMinimumError: true,
 			Quantity:       4,
 			FieldName:      "name",
@@ -35,7 +37,7 @@ func (a *App) Validate() error {
 	}
 
 	if len(a.Name) > 24 {
-		return &exceptions.FieldLengthError{
+		return &domain.FieldLengthError{
 			IsMinimumError: false,
 			Quantity:       24,
 			FieldName:      "name",
@@ -43,11 +45,11 @@ func (a *App) Validate() error {
 	}
 
 	if a.Context == "" {
-		return &exceptions.RequiredFieldError{FieldName: "context"}
+		return &domain.RequiredFieldError{FieldName: "context"}
 	}
 
 	if len(a.Context) < 6 {
-		return &exceptions.FieldLengthError{
+		return &domain.FieldLengthError{
 			IsMinimumError: true,
 			Quantity:       6,
 			FieldName:      "context",
@@ -55,7 +57,7 @@ func (a *App) Validate() error {
 	}
 
 	if len(a.Context) > 24 {
-		return &exceptions.FieldLengthError{
+		return &domain.FieldLengthError{
 			IsMinimumError: false,
 			Quantity:       24,
 			FieldName:      "context",
