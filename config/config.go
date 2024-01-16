@@ -8,6 +8,7 @@ import (
 type envConfig struct {
 	RedisRestUrl      string `env:"UPSTASH_REDIS_REST_URL,required"`
 	RedisRestToken    string `env:"UPSTASH_REDIS_REST_TOKEN,required"`
+	RedisPassword     string `env:"UPSTASH_REDIS_PASSWORD,required"`
 	Auth0Domain       string `env:"AUTH0_DOMAIN,required"`
 	Auth0ClientId     string `env:"AUTH0_CLIENT_ID,required"`
 	Auth0ClientSecret string `env:"AUTH0_CLIENT_SECRET,required"`
@@ -16,23 +17,24 @@ type envConfig struct {
 }
 
 type Config struct {
-	Redis  *UpstashRedisCredentials
-	Auth0  *Auth0Credentials
-	Server *ServerHTTP
+	Redis  *upstashRedisCredentials
+	Auth0  *auth0Credentials
+	Server *serverHTTP
 }
 
-type UpstashRedisCredentials struct {
+type upstashRedisCredentials struct {
 	RestUrl   string
 	RestToken string
+	Password  string
 }
 
-type Auth0Credentials struct {
+type auth0Credentials struct {
 	Domain       string
 	ClientId     string
 	ClientSecret string
 }
 
-type ServerHTTP struct {
+type serverHTTP struct {
 	Host string
 	Port int
 }
@@ -50,16 +52,17 @@ func NewConfig() (*Config, error) {
 	}
 
 	cfg := &Config{
-		Redis: &UpstashRedisCredentials{
+		Redis: &upstashRedisCredentials{
 			RestUrl:   environment.RedisRestUrl,
 			RestToken: environment.RedisRestToken,
+			Password:  environment.RedisPassword,
 		},
-		Auth0: &Auth0Credentials{
+		Auth0: &auth0Credentials{
 			Domain:       environment.Auth0Domain,
 			ClientId:     environment.Auth0ClientId,
 			ClientSecret: environment.Auth0ClientSecret,
 		},
-		Server: &ServerHTTP{
+		Server: &serverHTTP{
 			Host: environment.ServerHTTPHost,
 			Port: environment.ServerHTTPPort,
 		},
