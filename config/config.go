@@ -12,14 +12,13 @@ type envConfig struct {
 	Auth0Domain       string `env:"AUTH0_DOMAIN,required"`
 	Auth0ClientId     string `env:"AUTH0_CLIENT_ID,required"`
 	Auth0ClientSecret string `env:"AUTH0_CLIENT_SECRET,required"`
-	ServerHTTPPort    int    `env:"SERVER_HTTP_PORT,required"`
-	ServerHTTPHost    string `env:"SERVER_HTTP_HOST,required"`
+	Auth0CallbackUrl  string `env:"AUTH0_CALLBACK_URL,required"`
+	Auth0LogoutUrl    string `env:"AUTH0_LOGOUT_URL,required"`
 }
 
 type Config struct {
-	Redis  *upstashRedisCredentials
-	Auth0  *auth0Credentials
-	Server *serverHTTP
+	Redis *upstashRedisCredentials
+	Auth0 *Auth0Credentials
 }
 
 type upstashRedisCredentials struct {
@@ -28,15 +27,12 @@ type upstashRedisCredentials struct {
 	Password  string
 }
 
-type auth0Credentials struct {
+type Auth0Credentials struct {
 	Domain       string
 	ClientId     string
 	ClientSecret string
-}
-
-type serverHTTP struct {
-	Host string
-	Port int
+	LogoutUrl    string
+	CallbackUrl  string
 }
 
 func NewConfig() (*Config, error) {
@@ -57,14 +53,12 @@ func NewConfig() (*Config, error) {
 			RestToken: environment.RedisRestToken,
 			Password:  environment.RedisPassword,
 		},
-		Auth0: &auth0Credentials{
+		Auth0: &Auth0Credentials{
 			Domain:       environment.Auth0Domain,
 			ClientId:     environment.Auth0ClientId,
 			ClientSecret: environment.Auth0ClientSecret,
-		},
-		Server: &serverHTTP{
-			Host: environment.ServerHTTPHost,
-			Port: environment.ServerHTTPPort,
+			LogoutUrl:    environment.Auth0LogoutUrl,
+			CallbackUrl:  environment.Auth0CallbackUrl,
 		},
 	}
 
