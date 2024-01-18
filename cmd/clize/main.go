@@ -5,44 +5,55 @@ import (
 	"log"
 
 	"github.com/charmingruby/clize/config"
+	"github.com/charmingruby/clize/internal/application"
 	"github.com/charmingruby/clize/internal/auth"
-	rdb "github.com/charmingruby/clize/internal/database/redis"
-	"github.com/charmingruby/clize/internal/domain/apps"
-	repository "github.com/charmingruby/clize/internal/repository/redis"
-	"github.com/charmingruby/clize/internal/transport/rest"
+	"github.com/charmingruby/clize/internal/auth/domain"
+	rdb "github.com/charmingruby/clize/pkg/database/redis"
+	"github.com/gin-gonic/gin"
 )
 
-const (
-	ApiPort = "8080"
-)
+var ApiPort = "8080"
 
 func main() {
 	// Load environment variables
-	cfg, err := config.NewConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	// Redis Connection
-	redisClient, err := rdb.Connect(cfg)
+	rc, err := rdb.Connect(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Initialize the repositories
-	appRepo := repository.NewRedisAppRepository(redisClient)
-
-	// Initialize the services
-	apps.NewAppService(appRepo)
-
-	// Authenticator
-	a, err := auth.New(cfg)
+	// Services
+	applicationSvc, err := application.NewService(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Server
-	r := rest.New(a)
+	r := gin.Default()
+
+	// Handlers
+	_, err = application.NewHTTPService(r, applicationSvc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Auth Handler
+	// Authenticator
+	authenticator, err := domain.New(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = auth.NewHTTPService(r, authenticator)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	err = r.Run(":" + ApiPort)
 	if err != nil {
 		log.Fatal(err)

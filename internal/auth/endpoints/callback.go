@@ -1,38 +1,14 @@
-package handlers
+package endpoints
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"net/http"
 
-	"github.com/charmingruby/clize/internal/auth"
+	"github.com/charmingruby/clize/internal/auth/domain"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
-// Handler for our login.
-func LoginHandler(auth *auth.Authenticator) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		state, err := generateRandomState()
-		if err != nil {
-			ctx.String(http.StatusInternalServerError, err.Error())
-			return
-		}
-
-		// Save the state inside the session.
-		session := sessions.Default(ctx)
-		session.Set("state", state)
-		if err := session.Save(); err != nil {
-			ctx.String(http.StatusInternalServerError, err.Error())
-			return
-		}
-
-		ctx.Redirect(http.StatusTemporaryRedirect, auth.AuthCodeURL(state))
-	}
-}
-
-// Handler for our callback.
-func CallbackHandler(auth *auth.Authenticator) gin.HandlerFunc {
+func NewCallbackHandler(auth *domain.Authenticator) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		session := sessions.Default(ctx)
 		if ctx.Query("state") != session.Get("state") {
@@ -69,23 +45,4 @@ func CallbackHandler(auth *auth.Authenticator) gin.HandlerFunc {
 		// Redirect to logged in page.
 		ctx.Redirect(http.StatusTemporaryRedirect, "/user")
 	}
-}
-
-// Handler for our logged-in user page.
-func UserProfileHandler(ctx *gin.Context) {
-	session := sessions.Default(ctx)
-	profile := session.Get("profile")
-
-	ctx.JSON(200, profile)
-}
-func generateRandomState() (string, error) {
-	b := make([]byte, 32)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-
-	state := base64.StdEncoding.EncodeToString(b)
-
-	return state, nil
 }

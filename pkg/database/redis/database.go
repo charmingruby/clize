@@ -1,6 +1,7 @@
-package redis
+package database
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/charmingruby/clize/config"
@@ -8,6 +9,7 @@ import (
 )
 
 func Connect(cfg *config.Config) (*rdb.Client, error) {
+	ctx := context.Background()
 
 	connectionString := fmt.Sprintf("rediss://default:%s@us1-ruling-gelding-37317.upstash.io:37317", cfg.Redis.Password)
 
@@ -16,7 +18,11 @@ func Connect(cfg *config.Config) (*rdb.Client, error) {
 		return nil, err
 	}
 
-	client := rdb.NewClient(opt)
+	redisClient := rdb.NewClient(opt)
+	connErr := redisClient.Ping(ctx)
+	if connErr.Err() != nil {
+		return nil, connErr.Err()
+	}
 
-	return client, nil
+	return redisClient, nil
 }

@@ -35,7 +35,7 @@ type Auth0Credentials struct {
 	CallbackUrl  string
 }
 
-func NewConfig() (*Config, error) {
+func LoadConfig() (*Config, error) {
 	err := godotenv.Load()
 	if err != nil {
 		return nil, err
