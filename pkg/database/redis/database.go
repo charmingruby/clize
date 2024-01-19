@@ -19,9 +19,9 @@ func Connect(cfg *config.Config) (*rdb.Client, error) {
 	}
 
 	redisClient := rdb.NewClient(opt)
-	connErr := redisClient.Ping(ctx)
-	if connErr.Err() != nil {
-		return nil, connErr.Err()
+	_, err = redisClient.Ping(ctx).Result()
+	if err != nil {
+		return nil, err
 	}
 
 	return redisClient, nil
