@@ -41,3 +41,16 @@ func (as *ApplicationService) GetApplication(name string) (*Application, error) 
 
 	return app, nil
 }
+
+func (as *ApplicationService) DeleteApplication(name string) error {
+	app, err := as.repo.FindByName(name)
+	if err != nil {
+		return err
+	}
+
+	if err := as.repo.Delete(app.Name); err != nil {
+		return err
+	}
+
+	return nil
+}

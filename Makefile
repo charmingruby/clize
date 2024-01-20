@@ -4,4 +4,10 @@ cli-run:
 test:
 	go test ./...
 
-.PHONY: cli-run
+build:
+	go build -o ./bin  cmd/clize/main.go
+
+run:
+	./bin/main
+
+.PHONY: cli-run test build

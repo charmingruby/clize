@@ -9,6 +9,10 @@ import (
 	rdb "github.com/go-redis/redis/v8"
 )
 
+const (
+	applicationPattern = "@apps/"
+)
+
 type RedisApplicationRepository struct {
 	rc  *rdb.Client
 	ctx context.Context
@@ -54,6 +58,13 @@ func (ar *RedisApplicationRepository) FindByName(name string) (*app.Application,
 	return app, nil
 }
 
-func (ar *RedisApplicationRepository) Delete(identifier string) error {
+func (ar *RedisApplicationRepository) Delete(name string) error {
+	key := fmt.Sprintf("%s%s", applicationPattern, name)
+
+	_, err := ar.rc.Del(ar.ctx, key).Result()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

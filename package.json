@@ -1,0 +1,35 @@
+{
+  "name": "clize",
+  "version": "1.0.0",
+  "description": "CLI for internal project team assignments quick communication",
+  "main": "index.js",
+  "scripts": {
+    "test": "go test ./...",
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charmingruby/clize.git"
+  },
+  "keywords": [
+    "go",
+    "cli",
+    "redis"
+  ],
+  "author": "Gustavo Dias",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charmingruby/clize/issues"
+  },
+  "homepage": "https://github.com/charmingruby/clize#readme",
+  "dependencies": {
+    "global": "^4.4.0",
+    "go-npm": "^0.1.9"
+  },
+  "goBinary": {
+    "name": "main",
+    "path": "./bin",
+    "url": "https://github.com/charmingruby/clize/releases/download/v{{version}}/clize_{{version}}_{{platform}}_{{arch}}.tar.gz"
+  }
+}
