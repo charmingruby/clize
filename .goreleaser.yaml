@@ -1,6 +1,5 @@
 builds:
-  - main: ./cmd/clize/
-  - binary: main
+  - binary: ./bin/main
     goos:
       - windows
       - darwin
