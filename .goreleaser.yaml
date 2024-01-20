@@ -1,4 +1,5 @@
 builds:
+  - main: ./cmd/clize/
   - binary: main
     goos:
       - windows
