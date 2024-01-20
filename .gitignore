@@ -3,6 +3,7 @@
 
 # node dependencies
 node_modules
+dist
 
 # binary file
 bin

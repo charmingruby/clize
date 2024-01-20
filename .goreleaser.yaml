@@ -1,5 +1,5 @@
 builds:
-  - binary: html-server
+  - binary: main
     goos:
       - windows
       - darwin
