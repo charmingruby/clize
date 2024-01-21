@@ -1,6 +1,8 @@
 package application
 
 import (
+	"context"
+
 	"github.com/charmingruby/clize/internal/application/database/redis"
 	"github.com/charmingruby/clize/internal/application/domain"
 	"github.com/charmingruby/clize/internal/application/transport"
@@ -9,7 +11,8 @@ import (
 )
 
 func NewService(rc *rdb.Client) (*domain.ApplicationService, error) {
-	applicationRepo := redis.NewRedisApplicationRepository(rc)
+	ctx := context.Background()
+	applicationRepo := redis.NewRedisApplicationRepository(rc, ctx)
 	service := domain.NewApplicationService(applicationRepo)
 	return service, nil
 }

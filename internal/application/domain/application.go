@@ -4,8 +4,9 @@ import "github.com/charmingruby/clize/pkg/errors"
 
 func NewApplication(name, context string) (*Application, error) {
 	a := &Application{
-		Name:    name,
-		Context: context,
+		Name:        name,
+		Context:     context,
+		Assignments: []Assignment{},
 	}
 
 	err := a.Validate()
@@ -17,8 +18,9 @@ func NewApplication(name, context string) (*Application, error) {
 }
 
 type Application struct {
-	Name    string `json:"name"`
-	Context string `json:"context"`
+	Name        string       `json:"name"`
+	Context     string       `json:"context"`
+	Assignments []Assignment `json:"assignments"`
 }
 
 func (a *Application) Validate() error {

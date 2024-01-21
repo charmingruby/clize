@@ -1,4 +1,4 @@
-cli-run:
+start:
 	go run cmd/clize/main.go
 
 test:
@@ -10,4 +10,4 @@ build:
 run:
 	./bin/main
 
-.PHONY: cli-run test build
+.PHONY: start run test build

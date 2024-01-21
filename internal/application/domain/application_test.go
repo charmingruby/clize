@@ -24,4 +24,5 @@ func TestAppJSONSerialization(t *testing.T) {
 
 	assert.Equal(t, app.Name, newApp.Name)
 	assert.Equal(t, app.Context, newApp.Context)
+	assert.Equal(t, app.Assignments, newApp.Assignments)
 }
