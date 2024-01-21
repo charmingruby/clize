@@ -42,6 +42,15 @@ func (as *ApplicationService) GetApplication(name string) (*Application, error) 
 	return app, nil
 }
 
+func (as *ApplicationService) FetchApplication() ([]*Application, error) {
+	app, err := as.repo.Fetch()
+	if err != nil {
+		return nil, err
+	}
+
+	return app, nil
+}
+
 func (as *ApplicationService) DeleteApplication(name string) error {
 	app, err := as.repo.FindByName(name)
 	if err != nil {

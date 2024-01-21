@@ -2,9 +2,9 @@ package redis
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
+	"github.com/charmingruby/clize/helpers"
 	app "github.com/charmingruby/clize/internal/application/domain"
 	rdb "github.com/go-redis/redis/v8"
 )
@@ -28,17 +28,31 @@ func NewRedisApplicationRepository(rc *rdb.Client) *RedisApplicationRepository {
 func (ar *RedisApplicationRepository) Create(app *app.Application) error {
 	key := fmt.Sprintf("%s%s", applicationPattern, app.Name)
 
-	data, err := json.Marshal(app)
+	json, err := helpers.JSONSerialize(app)
 	if err != nil {
 		return err
 	}
 
-	_, err = ar.rc.Set(ar.ctx, key, data, 0).Result()
+	_, err = ar.rc.Set(ar.ctx, key, json, 0).Result()
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (ar *RedisApplicationRepository) FindByKey(key string) (*app.Application, error) {
+	data, err := ar.rc.Get(ar.ctx, key).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	app, err := helpers.JSONDeserialize[app.Application]([]byte(data))
+	if err != nil {
+		return nil, err
+	}
+
+	return app, nil
 }
 
 func (ar *RedisApplicationRepository) FindByName(name string) (*app.Application, error) {
@@ -49,13 +63,34 @@ func (ar *RedisApplicationRepository) FindByName(name string) (*app.Application,
 		return nil, err
 	}
 
-	var app *app.Application
-
-	if err := json.Unmarshal([]byte(data), &app); err != nil {
+	app, err := helpers.JSONDeserialize[app.Application]([]byte(data))
+	if err != nil {
 		return nil, err
 	}
 
 	return app, nil
+}
+
+func (ar *RedisApplicationRepository) Fetch() ([]*app.Application, error) {
+	matchString := fmt.Sprintf("%s*", applicationPattern)
+
+	iter := ar.rc.Scan(ar.ctx, 0, matchString, 0).Iterator()
+
+	var apps []*app.Application
+
+	for iter.Next(ar.ctx) {
+		key := iter.Val()
+
+		app, _ := ar.FindByKey(key)
+
+		apps = append(apps, app)
+	}
+
+	if err := iter.Err(); err != nil {
+		return nil, iter.Err()
+	}
+
+	return apps, nil
 }
 
 func (ar *RedisApplicationRepository) Delete(name string) error {

@@ -54,10 +54,10 @@ func (a *Application) Validate() error {
 		}
 	}
 
-	if len(a.Context) > 24 {
+	if len(a.Context) > 40 {
 		return &errors.FieldLengthError{
 			IsMinimumError: false,
-			Quantity:       24,
+			Quantity:       40,
 			FieldName:      "context",
 		}
 	}
