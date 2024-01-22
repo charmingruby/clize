@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// Services
-	applicationSvc, err := application.NewService(rc)
+	services, err := application.NewService(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func main() {
 	r := gin.Default()
 
 	// Handlers
-	_, err = application.NewHTTPService(r, applicationSvc)
+	_, err = application.NewHTTPService(r, services)
 	if err != nil {
 		log.Fatal(err)
 	}
