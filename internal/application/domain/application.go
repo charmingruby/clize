@@ -32,10 +32,8 @@ type Application struct {
 func (a *Application) UpdateStatus(status string) error {
 	a.Status = status
 
-	if err := a.validateStatus(); err == "" {
-		return &errors.GenericValidationError{
-			Message: "Invalid status",
-		}
+	if err := ValidateStatus(a.Status); err != nil {
+		return err
 	}
 
 	return nil
@@ -82,13 +80,9 @@ func (a *Application) Validate() error {
 		}
 	}
 
+	if err := ValidateStatus(a.Status); err != nil {
+		return err
+	}
+
 	return nil
-}
-
-func (a *Application) validateStatus() string {
-	sts := Status()
-
-	isStsValid := sts[a.Status]
-
-	return isStsValid
 }

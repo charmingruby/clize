@@ -6,12 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewHTTPHandler(r *gin.Engine, svc *domain.ApplicationService) *gin.Engine {
-	createApplicationHandler := endpoints.NewCreateApplicationHandler(svc)
-	getApplicationHandler := endpoints.NewGetApplicationHandler(svc)
-	deleteApplicationHandler := endpoints.NewDeleteApplicationHandler(svc)
-	fetchApplicationsHandler := endpoints.NewFetchApplicationsHandler(svc)
-	modifyApplicationHandler := endpoints.NewModifyApplicationHandler(svc)
+func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
+	createApplicationHandler := endpoints.NewCreateApplicationHandler(svc.ApplicationService)
+	getApplicationHandler := endpoints.NewGetApplicationHandler(svc.ApplicationService)
+	deleteApplicationHandler := endpoints.NewDeleteApplicationHandler(svc.ApplicationService)
+	fetchApplicationsHandler := endpoints.NewFetchApplicationsHandler(svc.ApplicationService)
+	modifyApplicationHandler := endpoints.NewModifyApplicationHandler(svc.ApplicationService)
 
 	r.POST("/applications", createApplicationHandler)
 	r.GET("/applications/", fetchApplicationsHandler)

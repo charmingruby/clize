@@ -10,14 +10,27 @@ import (
 	rdb "github.com/go-redis/redis/v8"
 )
 
-func NewService(rc *rdb.Client) (*domain.ApplicationService, error) {
+func NewService(rc *rdb.Client) (*domain.Service, error) {
 	ctx := context.Background()
+
+	// Instantiate repos
 	applicationRepo := redis.NewRedisApplicationRepository(rc, ctx)
-	service := domain.NewApplicationService(applicationRepo)
-	return service, nil
+	assignmentRepo := redis.NewRedisAssignmentRepository(rc, ctx)
+
+	// Instatiate services
+	applicationService := domain.NewApplicationService(applicationRepo)
+	assignmentService := domain.NewAssignmentService(assignmentRepo)
+
+	// Centralize services
+	svc := &domain.Service{
+		ApplicationService: applicationService,
+		AssignmentService:  assignmentService,
+	}
+
+	return svc, nil
 }
 
-func NewHTTPService(r *gin.Engine, svc *domain.ApplicationService) (*gin.Engine, error) {
+func NewHTTPService(r *gin.Engine, svc *domain.Service) (*gin.Engine, error) {
 	r = transport.NewHTTPHandler(r, svc)
 	return r, nil
 }

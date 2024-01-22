@@ -1,9 +1,10 @@
 package domain
 
 type AssignmentRepository interface {
-	Create(assignment *Assignment) error
+	CreateAndAddToApplication(applicationName string, assignment *Assignment) error
 	FindByApplicationName(applicationName string) (*Assignment, error)
+	FindByTitle(title string) (*Assignment, error)
+	Modify(assignment *Assignment) error
 	Sign(assignment *Assignment) error
 	Delete(assignment *Assignment) error
-	Modify(assignment *Assignment) error
 }
