@@ -13,5 +13,20 @@ func NewUniqueValueViolationErrorMessage(entity string, field string) string {
 }
 
 func (v *UniqueValueViolationError) Error() string {
-	return NewUniqueValueViolationErrorMessage(v.Entity, v.Field)
+	return v.Message
+}
+
+type ResourceNotFoundError struct {
+	Entity  string `json:"entity"`
+	Message string `json:"message"`
+}
+
+func (nf *ResourceNotFoundError) Error() string {
+	return nf.Message
+}
+
+func NewResourceNotFoundErrorMessage(entity string) string {
+	msg := fmt.Sprintf("%s not found", entity)
+
+	return msg
 }

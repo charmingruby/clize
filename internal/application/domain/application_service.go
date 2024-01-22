@@ -1,6 +1,9 @@
 package domain
 
-import "github.com/charmingruby/clize/pkg/errors"
+import (
+	"github.com/charmingruby/clize/helpers"
+	"github.com/charmingruby/clize/pkg/errors"
+)
 
 type ApplicationService struct {
 	repo ApplicationRepository
@@ -58,6 +61,39 @@ func (as *ApplicationService) DeleteApplication(name string) error {
 	}
 
 	if err := as.repo.Delete(app.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (as *ApplicationService) ModifyApplication(identifier, name, context, status string) error {
+	app, err := as.repo.FindByName(identifier)
+	if err != nil {
+		return err
+	}
+
+	if app.Name == name {
+		as.repo.Delete(app.Name)
+	}
+
+	newApp := &Application{
+		Name:    helpers.If[string](name == "", app.Name, name),
+		Context: helpers.If[string](context == "", app.Context, context),
+		Status:  helpers.If[string](status == "", app.Status, status),
+	}
+
+	if status != "" {
+		if err := newApp.UpdateStatus(status); err != nil {
+			return err
+		}
+	}
+
+	if err := newApp.Validate(); err != nil {
+		return err
+	}
+
+	if err := as.repo.Create(newApp); err != nil {
 		return err
 	}
 

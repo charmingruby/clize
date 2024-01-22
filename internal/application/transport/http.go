@@ -11,10 +11,12 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.ApplicationService) *gin.Engine {
 	getApplicationHandler := endpoints.NewGetApplicationHandler(svc)
 	deleteApplicationHandler := endpoints.NewDeleteApplicationHandler(svc)
 	fetchApplicationsHandler := endpoints.NewFetchApplicationsHandler(svc)
+	modifyApplicationHandler := endpoints.NewModifyApplicationHandler(svc)
 
 	r.POST("/applications", createApplicationHandler)
 	r.GET("/applications/", fetchApplicationsHandler)
 	r.GET("/applications/:name", getApplicationHandler)
+	r.PUT("/applications/:name", modifyApplicationHandler)
 	r.DELETE("/applications/:name", deleteApplicationHandler)
 
 	return r

@@ -2,9 +2,14 @@ package domain
 
 import "github.com/charmingruby/clize/pkg/errors"
 
+var ()
+
 func NewApplication(name, context string) (*Application, error) {
+	sts := Status()
+
 	a := &Application{
 		Name:        name,
+		Status:      sts[awaiting],
 		Context:     context,
 		Assignments: []Assignment{},
 	}
@@ -20,7 +25,20 @@ func NewApplication(name, context string) (*Application, error) {
 type Application struct {
 	Name        string       `json:"name"`
 	Context     string       `json:"context"`
+	Status      string       `json:"status"`
 	Assignments []Assignment `json:"assignments"`
+}
+
+func (a *Application) UpdateStatus(status string) error {
+	a.Status = status
+
+	if err := a.validateStatus(); err == "" {
+		return &errors.GenericValidationError{
+			Message: "Invalid status",
+		}
+	}
+
+	return nil
 }
 
 func (a *Application) Validate() error {
@@ -65,4 +83,12 @@ func (a *Application) Validate() error {
 	}
 
 	return nil
+}
+
+func (a *Application) validateStatus() string {
+	sts := Status()
+
+	isStsValid := sts[a.Status]
+
+	return isStsValid
 }
