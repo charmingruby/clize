@@ -9,7 +9,7 @@ func NewApplication(name, context string) (*Application, error) {
 
 	a := &Application{
 		Name:        name,
-		Status:      sts[awaiting],
+		Status:      sts[done],
 		Context:     context,
 		Assignments: []Assignment{},
 	}
@@ -85,4 +85,15 @@ func (a *Application) Validate() error {
 	}
 
 	return nil
+}
+
+func (a *Application) ProgressReview() {
+	sts := Status()
+
+	if len(a.Assignments) == 0 {
+		a.Status = sts[done]
+		return
+	}
+
+	a.Status = sts[awaiting]
 }

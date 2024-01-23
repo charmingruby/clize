@@ -6,6 +6,7 @@ import (
 
 	"github.com/charmingruby/clize/internal/application/domain"
 	rq "github.com/charmingruby/clize/pkg/database/redis"
+	"github.com/charmingruby/clize/pkg/errors"
 	rdb "github.com/go-redis/redis/v8"
 )
 
@@ -26,10 +27,15 @@ func (ar *RedisAssignmentRepository) CreateAndAddToApplication(applicationName s
 
 	app, err := rq.Get[domain.Application](*ar.rc, ar.ctx, appKey)
 	if err != nil {
-		return err
+		return &errors.ResourceNotFoundError{
+			Entity:  "application",
+			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		}
 	}
 
 	app.Assignments = append(app.Assignments, *assignment)
+
+	app.ProgressReview()
 
 	if err := rq.Create[*domain.Application](*ar.rc, ar.ctx, appKey, app); err != nil {
 		return err

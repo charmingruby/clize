@@ -1,11 +1,11 @@
 start:
-	go run cmd/clize/main.go
+	go run cmd/api/main.go
 
 test:
 	go test ./...
 
 build:
-	go build -o ./bin  cmd/clize/main.go
+	go build -o ./bin  cmd/api/main.go
 
 run:
 	./bin/main

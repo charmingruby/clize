@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/charmingruby/clize/helpers"
-	"github.com/charmingruby/clize/pkg/errors"
 	rdb "github.com/go-redis/redis/v8"
 )
 
@@ -26,10 +25,7 @@ func Get[T any](rc rdb.Client, ctx context.Context, key string) (*T, error) {
 	data, err := rc.Get(ctx, key).Result()
 
 	if err != nil {
-		return nil, &errors.ResourceNotFoundError{
-			Entity:  "key",
-			Message: errors.NewResourceNotFoundErrorMessage(key),
-		}
+		return nil, err
 	}
 
 	item, err := helpers.JSONDeserialize[T]([]byte(data))

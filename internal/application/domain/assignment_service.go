@@ -10,6 +10,17 @@ func NewAssignmentService(repo AssignmentRepository) *AssignmentService {
 	}
 }
 
-func (as *AssignmentService) AddAssignment(applicationName string, assignment *Assignment) error {
+func (as *AssignmentService) AddAssignment(applicationName, title, description string, createdBy int) error {
+	newAssignment, err := NewAssignment(
+		title, description, createdBy,
+	)
+	if err != nil {
+		return err
+	}
+
+	if err := as.repo.CreateAndAddToApplication(applicationName, newAssignment); err != nil {
+		return err
+	}
+
 	return nil
 }

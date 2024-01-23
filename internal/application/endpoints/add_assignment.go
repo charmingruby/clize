@@ -15,7 +15,7 @@ type addAssignmentRequest struct {
 
 var addAssignmentRequiredFields = []string{"title", "description"}
 
-func NewAddAssignmentHandler(svc *domain.Service) gin.HandlerFunc {
+func NewAddAssignmentHandler(svc *domain.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		applicationName := ctx.Param("application-name")
 
@@ -31,20 +31,9 @@ func NewAddAssignmentHandler(svc *domain.Service) gin.HandlerFunc {
 		}
 
 		// TODO: handle with session value
-		createdById := 1
+		createdBy := 1
 
-		// check if profile exists
-
-		newAssignment, err := domain.NewAssignment(
-			req.Title, req.Description, createdById,
-		)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
-			return
-		}
-
-		if err := svc.AssignmentService.AddAssignment(applicationName, newAssignment); err != nil {
-			//errType := reflect.TypeOf(err)
+		if err := svc.AddAssignment(applicationName, req.Title, req.Description, createdBy); err != nil {
 
 			ctx.JSON(http.StatusBadRequest, err)
 			return

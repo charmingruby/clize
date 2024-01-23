@@ -31,9 +31,9 @@ type Assignment struct {
 	Description string     `json:"description"`
 	Status      string     `json:"status"`
 	CreatedBy   int        `json:"created_by"`
-	SignedBy    string     `json:"signed_by"`
+	SignedBy    string     `json:"signed_by,omitempty"`
 	CreateAt    time.Time  `json:"create_at"`
-	SolvedAt    *time.Time `json:"solved_at"`
+	SolvedAt    *time.Time `json:"solved_at,omitempty"`
 }
 
 func (a *Assignment) Validate() error {
@@ -73,10 +73,10 @@ func (a *Assignment) Validate() error {
 		}
 	}
 
-	if len(a.Description) > 48 {
+	if len(a.Description) > 100 {
 		return &errors.FieldLengthError{
 			IsMinimumError: false,
-			Quantity:       48,
+			Quantity:       100,
 			FieldName:      "description",
 		}
 	}

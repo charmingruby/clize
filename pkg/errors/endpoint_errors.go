@@ -46,14 +46,16 @@ func NewInvalidPayloadErrorMessage(requiredFields []string) string {
 	var fieldsStr string
 
 	for idx, field := range requiredFields {
+
 		if idx+1 == len(requiredFields) {
 
 			fieldsStr += fmt.Sprintf(" and %s", field)
 
+		} else if idx == 0 {
+			fieldsStr += fmt.Sprint(field)
 		} else {
 			fieldsStr += fmt.Sprintf(", %s", field)
 		}
-
 	}
 
 	msg = fmt.Sprintf("Invalid payload, fields required: %s.", fieldsStr)
