@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/application/domain"
+	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +13,8 @@ type createApplicationRequest struct {
 	Name    string `json:"name"`
 	Context string `json:"context"`
 }
+
+var createApplicationRequiredFields = []string{"name", "context"}
 
 type createApplicationResponse struct {
 	Message string `json:"message"`
@@ -23,6 +26,11 @@ func NewCreateApplicationHandler(svc *domain.ApplicationService) gin.HandlerFunc
 
 		var req createApplicationRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
+			err = &errors.InvalidPayloadError{
+				Message:        errors.NewInvalidPayloadErrorMessage(createApplicationRequiredFields),
+				RequiredFields: createApplicationRequiredFields,
+			}
+
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}

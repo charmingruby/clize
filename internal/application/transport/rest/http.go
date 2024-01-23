@@ -1,4 +1,4 @@
-package transport
+package rest
 
 import (
 	"github.com/charmingruby/clize/internal/application/domain"
@@ -18,6 +18,8 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	r.GET("/applications/:name", getApplicationHandler)
 	r.PUT("/applications/:name", modifyApplicationHandler)
 	r.DELETE("/applications/:name", deleteApplicationHandler)
+
+	r.POST("/applications/:application-name/assignments")
 
 	return r
 }

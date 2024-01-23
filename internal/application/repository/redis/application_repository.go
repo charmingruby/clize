@@ -9,10 +9,6 @@ import (
 	rdb "github.com/go-redis/redis/v8"
 )
 
-const (
-	applicationPattern = "@apps/"
-)
-
 type RedisApplicationRepository struct {
 	rc  *rdb.Client
 	ctx context.Context

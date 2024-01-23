@@ -5,7 +5,7 @@ import (
 
 	"github.com/charmingruby/clize/internal/application/domain"
 	"github.com/charmingruby/clize/internal/application/repository/redis"
-	"github.com/charmingruby/clize/internal/application/transport"
+	"github.com/charmingruby/clize/internal/application/transport/rest"
 	"github.com/gin-gonic/gin"
 	rdb "github.com/go-redis/redis/v8"
 )
@@ -31,6 +31,6 @@ func NewService(rc *rdb.Client) (*domain.Service, error) {
 }
 
 func NewHTTPService(r *gin.Engine, svc *domain.Service) (*gin.Engine, error) {
-	r = transport.NewHTTPHandler(r, svc)
+	r = rest.NewHTTPHandler(r, svc)
 	return r, nil
 }

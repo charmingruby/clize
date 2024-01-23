@@ -8,11 +8,13 @@ import (
 )
 
 func TestAssignmentJSONSerialization(t *testing.T) {
-	assignment := NewAssignment(
+	assignment, err := NewAssignment(
 		"get endpoint broken",
 		"fix the GET application endpoint",
-		"charmingruby",
+		1,
 	)
+
+	assert.NoError(t, err)
 
 	// Serialization
 	data, err := json.Marshal(assignment)

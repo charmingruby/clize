@@ -2,8 +2,10 @@ package redis
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/charmingruby/clize/internal/application/domain"
+	rq "github.com/charmingruby/clize/pkg/database/redis"
 	rdb "github.com/go-redis/redis/v8"
 )
 
@@ -20,6 +22,19 @@ func NewRedisAssignmentRepository(rc *rdb.Client, ctx context.Context) *RedisAss
 }
 
 func (ar *RedisAssignmentRepository) CreateAndAddToApplication(applicationName string, assignment *domain.Assignment) error {
+	appKey := fmt.Sprintf("%s%s", applicationPattern, applicationName)
+
+	app, err := rq.Get[domain.Application](*ar.rc, ar.ctx, appKey)
+	if err != nil {
+		return err
+	}
+
+	app.Assignments = append(app.Assignments, *assignment)
+
+	if err := rq.Create[*domain.Application](*ar.rc, ar.ctx, appKey, app); err != nil {
+		return err
+	}
+
 	return nil
 }
 

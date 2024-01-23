@@ -6,7 +6,7 @@ import (
 	"github.com/charmingruby/clize/pkg/errors"
 )
 
-func NewAssignment(title, description, createdBy string) *Assignment {
+func NewAssignment(title, description string, createdBy int) (*Assignment, error) {
 	sts := Status()
 
 	a := &Assignment{
@@ -19,14 +19,18 @@ func NewAssignment(title, description, createdBy string) *Assignment {
 		SolvedAt:    nil,
 	}
 
-	return a
+	if err := a.Validate(); err != nil {
+		return nil, err
+	}
+
+	return a, nil
 }
 
 type Assignment struct {
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	Status      string     `json:"status"`
-	CreatedBy   string     `json:"created_by"`
+	CreatedBy   int        `json:"created_by"`
 	SignedBy    string     `json:"signed_by"`
 	CreateAt    time.Time  `json:"create_at"`
 	SolvedAt    *time.Time `json:"solved_at"`
