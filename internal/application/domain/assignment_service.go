@@ -24,3 +24,21 @@ func (as *AssignmentService) AddAssignment(applicationName, title, description s
 
 	return nil
 }
+
+func (as *AssignmentService) FetchAssignment() ([]*Assignment, error) {
+	assignments, err := as.repo.Fetch()
+	if err != nil {
+		return nil, err
+	}
+
+	return assignments, nil
+}
+
+func (as *AssignmentService) FetchAssignmentByApplication(appName string) ([]Assignment, error) {
+	assignments, err := as.repo.FetchByApplication(appName)
+	if err != nil {
+		return nil, err
+	}
+
+	return assignments, nil
+}

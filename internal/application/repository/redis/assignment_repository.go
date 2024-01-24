@@ -44,6 +44,37 @@ func (ar *RedisAssignmentRepository) CreateAndAddToApplication(applicationName s
 	return nil
 }
 
+func (ar *RedisAssignmentRepository) Fetch() ([]*domain.Assignment, error) {
+	pattern := fmt.Sprintf("%s*", applicationPattern)
+
+	apps, err := rq.Fetch[domain.Application](*ar.rc, ar.ctx, pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	var assignments []*domain.Assignment
+
+	for _, app := range apps {
+		assignmentList := app.Assignments
+		for _, assignment := range assignmentList {
+			assignments = append(assignments, &assignment)
+		}
+	}
+
+	return assignments, nil
+}
+
+func (ar *RedisAssignmentRepository) FetchByApplication(appName string) ([]domain.Assignment, error) {
+	pattern := fmt.Sprintf("%s%s", applicationPattern, appName)
+
+	app, err := rq.Get[domain.Application](*ar.rc, ar.ctx, pattern)
+	if err != nil {
+		return nil, err
+	}
+
+	return app.Assignments, nil
+}
+
 func (ar *RedisAssignmentRepository) FindByApplicationName(applicationName string) (*domain.Assignment, error) {
 	return nil, nil
 }
