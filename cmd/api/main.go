@@ -8,6 +8,7 @@ import (
 	"github.com/charmingruby/clize/internal/application"
 	"github.com/charmingruby/clize/internal/auth"
 	"github.com/charmingruby/clize/internal/auth/domain"
+	"github.com/charmingruby/clize/internal/common"
 	rdb "github.com/charmingruby/clize/pkg/database/redis"
 	"github.com/gin-gonic/gin"
 )
@@ -37,7 +38,12 @@ func main() {
 	r := gin.Default()
 
 	// Handlers
-	_, err = application.NewHTTPService(r, services)
+	r, err = application.NewHTTPService(r, services)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r, err = common.NewHTTPService(r)
 	if err != nil {
 		log.Fatal(err)
 	}
