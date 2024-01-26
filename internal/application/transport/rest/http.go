@@ -16,6 +16,7 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	addAssignmentHandler := endpoints.NewAddAssignmentHandler(svc.AssignmentService)
 	fetchAssignmentsHandler := endpoints.NewFetchAssignmentsHandler(svc.AssignmentService)
 	fetchAssignmentsByAppHandler := endpoints.NewFetchAssignmentsByApplication(svc.AssignmentService)
+	removeAssignmentHandler := endpoints.NewRemoveAssignmentHandler(svc.AssignmentService)
 
 	r.POST("/applications", createApplicationHandler)
 	r.GET("/applications/", fetchApplicationsHandler)
@@ -26,6 +27,7 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 
 	r.GET("/applications/assignments/:application-name", fetchAssignmentsByAppHandler)
 	r.GET("/assignments", fetchAssignmentsHandler)
+	r.DELETE("/assignments/:application-name/:assignment-title", removeAssignmentHandler)
 
 	return r
 }

@@ -91,6 +91,6 @@ func (ar *RedisAssignmentRepository) Sign(assignment *domain.Assignment) error {
 	return nil
 }
 
-func (ar *RedisAssignmentRepository) Delete(assignment *domain.Assignment) error {
+func (ar *RedisAssignmentRepository) Delete(applicationName, assignmentName string) error {
 	return nil
 }

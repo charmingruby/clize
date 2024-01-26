@@ -42,3 +42,14 @@ func (as *AssignmentService) FetchAssignmentByApplication(appName string) ([]Ass
 
 	return assignments, nil
 }
+
+func (as *AssignmentService) RemoveAssignmentFromApplication(appName, assignmentName string) error {
+	if err := as.repo.Delete(
+		appName,
+		assignmentName,
+	); err != nil {
+		return err
+	}
+
+	return nil
+}

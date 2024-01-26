@@ -8,5 +8,5 @@ type AssignmentRepository interface {
 	FindByTitle(title string) (*Assignment, error)
 	Modify(assignment *Assignment) error
 	Sign(assignment *Assignment) error
-	Delete(assignment *Assignment) error
+	Delete(applicationName, assignmentName string) error
 }

@@ -51,10 +51,10 @@ func (a *Assignment) Validate() error {
 		}
 	}
 
-	if len(a.Title) > 32 {
+	if len(a.Title) > 20 {
 		return &errors.FieldLengthError{
 			IsMinimumError: false,
-			Quantity:       32,
+			Quantity:       20,
 			FieldName:      "title",
 		}
 	}
