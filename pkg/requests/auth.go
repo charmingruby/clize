@@ -2,16 +2,35 @@ package requests
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 )
 
+type authResponse struct {
+	RedirectUrl string `json:"redirect_url"`
+}
+
 func Auth(path string) error {
+
 	res, err := doRequest("GET", path, nil, false)
 	if err != nil {
 		return err
 	}
+
+	defer res.Body.Close()
+	body, error := ioutil.ReadAll(res.Body)
+	if error != nil {
+		fmt.Println(error)
+	}
+
+	var result authResponse
+	if err := json.Unmarshal(body, &result); err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(result.RedirectUrl)
 
 	return createTokenCache(res.Body)
 }
@@ -23,11 +42,13 @@ type cacheToken struct {
 func createTokenCache(body io.ReadCloser) error {
 	token, err := ioutil.ReadAll(body)
 	if err != nil {
+
 		return err
 	}
 
 	file, err := os.Create(".cacheToken")
 	if err != nil {
+
 		return err
 	}
 

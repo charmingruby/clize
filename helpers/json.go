@@ -13,7 +13,6 @@ func JSONDeserialize[T any](data []byte) (*T, error) {
 }
 
 func JSONSerialize(v any) ([]byte, error) {
-
 	data, err := json.Marshal(v)
 	if err != nil {
 		return nil, err

@@ -10,6 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type loginResponse struct {
+	RedirectUrl string `json:"redirect_url"`
+}
+
 func NewLoginHandler(auth *domain.Authenticator) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		state, err := generateRandomState()
@@ -26,7 +30,11 @@ func NewLoginHandler(auth *domain.Authenticator) gin.HandlerFunc {
 			return
 		}
 
-		ctx.Redirect(http.StatusTemporaryRedirect, auth.AuthCodeURL(state))
+		res := loginResponse{
+			RedirectUrl: auth.AuthCodeURL(state),
+		}
+
+		ctx.JSON(http.StatusOK, res)
 	}
 }
 

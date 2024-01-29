@@ -11,7 +11,6 @@ test:
 .PHONY: build
 build: build-api build-cli
 
-
 .PHONY: build-cli
 build-cli: 
 	go build -o ${BINARY_PATH}/cli cmd/cli/main.go
