@@ -1,6 +1,6 @@
 # 🏗️ clize
 
-CLI for internal projects team, providing quick communication and documentation, made using Go, Gin, gRPC, Auth0, PostgreSQL, Redis and Cobra.
+CLI for internal projects team, providing quick communication and documentation, made using Go, Gin, Auth0, Redis and Cobra.
 
 > 🔥 This project aims to make it easier to developers communicate between a lot of projects assignments, centralizing them and faciliting the feedbacks.
 

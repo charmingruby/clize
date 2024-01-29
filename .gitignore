@@ -1,19 +1,11 @@
 # environment variables
 .env
 
-# node dependencies
-node_modules
-dist
-
 # binary file
 bin
 
 # todo
 todo.md
 
-# db data
-db-data
-
-# temporary files
-tmp
+# cached auth token
 .cacheToken
