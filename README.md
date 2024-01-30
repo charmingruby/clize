@@ -23,12 +23,10 @@ CLI for internal projects team, providing quick communication and documentation,
 
 #### Documentation
 
-- it should be able to create a workspace
-- it should be able to manage a workspace
-- it should be able to add a document to a workspace
+- it should be able to create a document
 - it should be able to manage a document
-- it should be able to add wrapper to a document
-- it should be able to manage a wrapper
-- it should be able to add a content to a wrapper
+- it should be able to add a topic to a document
+- it should be able to manage a topic
+- it should be able to add a content to a topic
 - it should be able to manage a content
 - it should be able to generate a documentation of a document in .md file

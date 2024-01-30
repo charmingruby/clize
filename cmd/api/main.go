@@ -35,6 +35,7 @@ func main() {
 	}
 
 	// Server
+	// gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	// Handlers

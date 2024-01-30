@@ -22,4 +22,3 @@ build-api:
 .PHONY: run
 run:
 	./bin/main
-
