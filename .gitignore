@@ -3,6 +3,8 @@
 
 # binary file
 bin
+api
+cli
 
 # todo
 todo.md

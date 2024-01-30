@@ -13,7 +13,6 @@ type authResponse struct {
 }
 
 func Auth(path string) error {
-
 	res, err := doRequest("GET", path, nil, false)
 	if err != nil {
 		return err

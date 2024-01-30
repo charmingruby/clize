@@ -6,8 +6,6 @@ import (
 
 	"github.com/charmingruby/clize/config"
 	"github.com/charmingruby/clize/internal/application"
-	"github.com/charmingruby/clize/internal/auth"
-	"github.com/charmingruby/clize/internal/auth/domain"
 	"github.com/charmingruby/clize/internal/common"
 	rdb "github.com/charmingruby/clize/pkg/database/redis"
 	"github.com/gin-gonic/gin"
@@ -50,16 +48,6 @@ func main() {
 	}
 
 	// Auth Handler
-	// Authenticator
-	authenticator, err := domain.New(cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = auth.NewHTTPService(r, authenticator)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	err = r.Run(":" + ApiPort)
 	if err != nil {

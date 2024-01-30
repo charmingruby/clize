@@ -1,4 +1,3 @@
-BINARY_PATH = ./bin
 
 .PHONY: start
 start:
@@ -13,12 +12,12 @@ build: build-api build-cli
 
 .PHONY: build-cli
 build-cli: 
-	go build -o ${BINARY_PATH}/cli cmd/cli/main.go
+	go build -o cli cmd/cli/main.go
 
 .PHONY: build-api
 build-api:
-	go build -o ${BINARY_PATH}/api cmd/api/main.go
+	go build -o api cmd/api/main.go
 
 .PHONY: run
 run:
-	./bin/main
+	api
