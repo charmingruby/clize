@@ -6,6 +6,7 @@ import (
 
 	"github.com/charmingruby/clize/config"
 	"github.com/charmingruby/clize/internal/application"
+	"github.com/charmingruby/clize/internal/auth"
 	"github.com/charmingruby/clize/internal/common"
 	rdb "github.com/charmingruby/clize/pkg/database/redis"
 	"github.com/gin-gonic/gin"
@@ -27,7 +28,12 @@ func main() {
 	}
 
 	// Services
-	services, err := application.NewService(rc)
+	appService, err := application.NewService(rc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	authSvc, err := auth.NewService(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +43,12 @@ func main() {
 	r := gin.Default()
 
 	// Handlers
-	r, err = application.NewHTTPService(r, services)
+	r, err = application.NewHTTPService(r, appService)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r, err = auth.NewHTTPService(r, authSvc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,8 +57,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// Auth Handler
 
 	err = r.Run(":" + ApiPort)
 	if err != nil {

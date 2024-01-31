@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/auth/domain"
+	"github.com/charmingruby/clize/internal/common/http/responses"
 	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +25,6 @@ func NewSignUpHandler(svc *domain.Service) gin.HandlerFunc {
 				Message:        errors.NewInvalidPayloadErrorMessage(signUpRequiredFields),
 				RequiredFields: signUpRequiredFields,
 			}
-
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
@@ -34,7 +34,13 @@ func NewSignUpHandler(svc *domain.Service) gin.HandlerFunc {
 			req.Email,
 			req.Password,
 		); err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
+
+		ctx.JSON(
+			http.StatusCreated,
+			responses.NewCreatedResponse("account"),
+		)
 	}
 }
