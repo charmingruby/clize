@@ -24,12 +24,7 @@ func NewRedisApplicationRepository(rc *rdb.Client, ctx context.Context) *RedisAp
 
 func (ar *RedisApplicationRepository) Create(app *application.Application) error {
 	key := fmt.Sprintf("%s%s", applicationPattern, app.Name)
-
-	if err := rq.Create[*application.Application](*ar.rc, ar.ctx, key, app); err != nil {
-		return err
-	}
-
-	return nil
+	return rq.Create[*application.Application](*ar.rc, ar.ctx, key, app)
 }
 
 func (ar *RedisApplicationRepository) FindByKey(key string) (*application.Application, error) {

@@ -37,11 +37,7 @@ func (ar *RedisAssignmentRepository) CreateAndAddToApplication(applicationName s
 
 	app.ProgressReview()
 
-	if err := rq.Create[*domain.Application](*ar.rc, ar.ctx, appKey, app); err != nil {
-		return err
-	}
-
-	return nil
+	return rq.Create[*domain.Application](*ar.rc, ar.ctx, appKey, app)
 }
 
 func (ar *RedisAssignmentRepository) Fetch() ([]*domain.Assignment, error) {

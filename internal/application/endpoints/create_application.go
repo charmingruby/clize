@@ -23,7 +23,6 @@ type createApplicationResponse struct {
 func NewCreateApplicationHandler(svc *domain.ApplicationService) gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
-
 		var req createApplicationRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			err = &errors.InvalidPayloadError{
