@@ -3,6 +3,7 @@ package rest
 import (
 	"github.com/charmingruby/clize/internal/application/domain"
 	"github.com/charmingruby/clize/internal/application/endpoints"
+	"github.com/charmingruby/clize/internal/common"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,16 +19,18 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	fetchAssignmentsByAppHandler := endpoints.NewFetchAssignmentsByApplication(svc.AssignmentService)
 	removeAssignmentHandler := endpoints.NewRemoveAssignmentHandler(svc.AssignmentService)
 
-	r.POST("/applications", createApplicationHandler)
-	r.GET("/applications/", fetchApplicationsHandler)
-	r.GET("/applications/:name", getApplicationHandler)
-	r.PUT("/applications/:name", modifyApplicationHandler)
-	r.DELETE("/applications/:name", deleteApplicationHandler)
-	r.POST("/applications/:application-name/assignments", addAssignmentHandler)
-
-	r.GET("/applications/assignments/:application-name", fetchAssignmentsByAppHandler)
-	r.GET("/assignments", fetchAssignmentsHandler)
-	r.DELETE("/assignments/:application-name/:assignment-title", removeAssignmentHandler)
+	private := r.Group("admin", common.AuthMiddleware())
+	{
+		private.POST("/applications", createApplicationHandler)
+		private.GET("/applications/", fetchApplicationsHandler)
+		private.GET("/applications/:name", getApplicationHandler)
+		private.PUT("/applications/:name", modifyApplicationHandler)
+		private.DELETE("/applications/:name", deleteApplicationHandler)
+		private.POST("/applications/:application-name/assignments", addAssignmentHandler)
+		private.GET("/applications/assignments/:application-name", fetchAssignmentsByAppHandler)
+		private.GET("/assignments", fetchAssignmentsHandler)
+		private.DELETE("/assignments/:application-name/:assignment-title", removeAssignmentHandler)
+	}
 
 	return r
 }

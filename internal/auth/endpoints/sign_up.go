@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/auth/domain"
-	"github.com/charmingruby/clize/internal/common/http/responses"
 	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/pkg/responses"
 	"github.com/gin-gonic/gin"
 )
 

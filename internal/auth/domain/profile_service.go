@@ -1,6 +1,9 @@
 package domain
 
-import "github.com/charmingruby/clize/pkg/errors"
+import (
+	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/pkg/hash"
+)
 
 type ProfileService struct {
 	profileRepo ProfileRepository
@@ -41,6 +44,16 @@ func (ps *ProfileService) Login(
 	profile, err := ps.profileRepo.FindByUsername(username)
 	if err != nil {
 		return err
+	}
+
+	err = hash.VerifyIfHashMatches(
+		profile.Password,
+		password,
+	)
+	if err != nil {
+		return &errors.GenericValidationError{
+			Message: "credentials do not match",
+		}
 	}
 
 	return nil

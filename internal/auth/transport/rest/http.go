@@ -8,8 +8,9 @@ import (
 
 func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	signUpHandler := endpoints.NewSignUpHandler(svc)
+	signInHandler := endpoints.NewSignInHandler(svc)
 
-	r.POST("/sign-in")
+	r.POST("/sign-in", signInHandler)
 	r.POST("/sign-up", signUpHandler)
 
 	return r

@@ -10,7 +10,7 @@ CLI for internal projects team, providing quick communication and documentation,
 
 #### Authentication
 
-- it should be able to auth with Auth0
+- it should be able to auth
 - it should be able to registrate a new profile
 
 #### Quick applications assignments
