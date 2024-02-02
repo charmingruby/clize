@@ -1,6 +1,7 @@
 package requests
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -8,28 +9,27 @@ import (
 	"os"
 )
 
-type authResponse struct {
-	RedirectUrl string `json:"redirect_url"`
+type credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func Auth(path string) error {
-	res, err := doRequest("GET", path, nil, false)
-	if err != nil {
+type authResponse struct {
+	Token string `json:"token"`
+}
+
+func Auth(username, password, path string) error {
+	creds := credentials{username, password}
+
+	var credsBody bytes.Buffer
+	if err := json.NewEncoder(&credsBody).Encode(creds); err != nil {
 		return err
 	}
 
-	defer res.Body.Close()
-	body, error := ioutil.ReadAll(res.Body)
-	if error != nil {
-		fmt.Println(error)
+	res, err := doRequest("POST", path, &credsBody, false)
+	if err != nil {
+		return err
 	}
-
-	var result authResponse
-	if err := json.Unmarshal(body, &result); err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(result.RedirectUrl)
 
 	return createTokenCache(res.Body)
 }
@@ -39,10 +39,16 @@ type cacheToken struct {
 }
 
 func createTokenCache(body io.ReadCloser) error {
-	token, err := ioutil.ReadAll(body)
+	defer body.Close()
+	response, err := ioutil.ReadAll(body)
 	if err != nil {
 
 		return err
+	}
+
+	var result authResponse
+	if err := json.Unmarshal(response, &result); err != nil {
+		fmt.Println(err)
 	}
 
 	file, err := os.Create(".cacheToken")
@@ -51,7 +57,9 @@ func createTokenCache(body io.ReadCloser) error {
 		return err
 	}
 
-	cache := cacheToken{string(token)}
+	cache := &cacheToken{
+		Token: result.Token,
+	}
 	data, err := json.Marshal(cache)
 	if err != nil {
 		return err
