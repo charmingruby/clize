@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/auth/domain"
+	"github.com/charmingruby/clize/internal/common"
 	"github.com/charmingruby/clize/pkg/errors"
-	"github.com/charmingruby/clize/pkg/responses"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,7 +40,7 @@ func NewSignUpHandler(svc *domain.Service) gin.HandlerFunc {
 
 		ctx.JSON(
 			http.StatusCreated,
-			responses.NewCreatedResponse("account"),
+			common.NewCreatedResponse("profile"),
 		)
 	}
 }

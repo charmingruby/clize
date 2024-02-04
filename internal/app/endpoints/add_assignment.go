@@ -3,7 +3,8 @@ package endpoints
 import (
 	"net/http"
 
-	"github.com/charmingruby/clize/internal/app/domain/assignment"
+	"github.com/charmingruby/clize/internal/app/domain/application"
+	"github.com/charmingruby/clize/internal/common"
 	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +16,7 @@ type addAssignmentRequest struct {
 
 var addAssignmentRequiredFields = []string{"title", "description"}
 
-func NewAddAssignmentHandler(svc *assignment.AssignmentService) gin.HandlerFunc {
+func NewAddAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		applicationName := ctx.Param("application-name")
 
@@ -31,14 +32,13 @@ func NewAddAssignmentHandler(svc *assignment.AssignmentService) gin.HandlerFunc 
 		}
 
 		// TODO: handle with session value
-		createdBy := 1
+		createdBy := "static profile"
 
 		if err := svc.AddAssignment(applicationName, req.Title, req.Description, createdBy); err != nil {
-
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
 
-		ctx.Status(http.StatusCreated)
+		ctx.JSON(http.StatusCreated, common.NewCreatedResponse(req.Title))
 	}
 }

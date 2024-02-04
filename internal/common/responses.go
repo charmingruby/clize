@@ -1,4 +1,4 @@
-package responses
+package common
 
 import "fmt"
 

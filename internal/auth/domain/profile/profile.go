@@ -3,8 +3,8 @@ package profile
 import (
 	"time"
 
-	"github.com/charmingruby/clize/pkg/hash"
-	"github.com/charmingruby/clize/pkg/id"
+	"github.com/charmingruby/clize/pkg/cryptography"
+	"github.com/charmingruby/clize/pkg/uuid"
 )
 
 type Profile struct {
@@ -23,7 +23,7 @@ func NewProfile(
 	password string,
 ) (*Profile, error) {
 	p := &Profile{
-		ID:           id.GenerateUUID(),
+		ID:           uuid.GenerateUUID(),
 		Username:     username,
 		Email:        email,
 		Verified:     false,
@@ -46,7 +46,7 @@ func (p *Profile) ChangePassword(password string) error {
 func encPass(p *Profile) error {
 	// validates
 
-	hashedPassword, err := hash.GenerateHash(p.Password)
+	hashedPassword, err := cryptography.GenerateHash(p.Password)
 	if err != nil {
 		return err
 	}

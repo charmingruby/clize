@@ -1,17 +1,21 @@
-package assignment
+package application
 
 import (
+	"strings"
 	"time"
 
-	"github.com/charmingruby/clize/internal/app/domain/common"
 	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/pkg/uuid"
 )
 
-func NewAssignment(title, description string, createdBy int) (*Assignment, error) {
-	sts := common.Status()
+func NewAssignment(title, description, createdBy string) (*Assignment, error) {
+	sts := Status()
+
+	formattedTitle := formatTitle(title)
 
 	a := &Assignment{
-		Title:       title,
+		ID:          uuid.GenerateUUID(),
+		Title:       formattedTitle,
 		Description: description,
 		CreatedBy:   createdBy,
 		Status:      sts["awaiting"],
@@ -28,10 +32,11 @@ func NewAssignment(title, description string, createdBy int) (*Assignment, error
 }
 
 type Assignment struct {
+	ID          string     `json:"id"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	Status      string     `json:"status"`
-	CreatedBy   int        `json:"created_by"`
+	CreatedBy   string     `json:"created_by"`
 	SignedBy    string     `json:"signed_by,omitempty"`
 	CreateAt    time.Time  `json:"create_at"`
 	SolvedAt    *time.Time `json:"solved_at,omitempty"`
@@ -82,17 +87,13 @@ func (a *Assignment) Validate() error {
 		}
 	}
 
-	if err := common.ValidateStatus(a.Status); err != nil {
+	if err := ValidateStatus(a.Status); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (a *Assignment) Sign(githubUsername string) {
-	now := time.Now()
-	nowPointer := &now
-
-	a.SignedBy = githubUsername
-	a.SolvedAt = nowPointer
+func formatTitle(title string) string {
+	return strings.ReplaceAll(title, " ", "_")
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/charmingruby/clize/internal/app/domain/assignment"
+	"github.com/charmingruby/clize/internal/app/domain/application"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,10 +12,10 @@ type removeAssignmentResponse struct {
 	Message string `json:"message"`
 }
 
-func NewRemoveAssignmentHandler(svc *assignment.AssignmentService) gin.HandlerFunc {
+func NewRemoveAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		appName := ctx.Param("application-name")
-		assignmentName := ctx.Param("assignment_name")
+		assignmentName := ctx.Param("assignment-title")
 
 		if err := svc.RemoveAssignmentFromApplication(
 			appName,

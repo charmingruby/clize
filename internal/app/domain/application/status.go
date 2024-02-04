@@ -1,4 +1,4 @@
-package common
+package application
 
 import "github.com/charmingruby/clize/pkg/errors"
 

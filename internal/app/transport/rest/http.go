@@ -19,18 +19,16 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	fetchAssignmentsByAppHandler := endpoints.NewFetchAssignmentsByApplication(svc.AssignmentService)
 	removeAssignmentHandler := endpoints.NewRemoveAssignmentHandler(svc.AssignmentService)
 
-	private := r.Group("admin", common.AuthMiddleware())
-	{
-		private.POST("/applications", createApplicationHandler)
-		private.GET("/applications/", fetchApplicationsHandler)
-		private.GET("/applications/:name", getApplicationHandler)
-		private.PUT("/applications/:name", modifyApplicationHandler)
-		private.DELETE("/applications/:name", deleteApplicationHandler)
-		private.POST("/applications/:application-name/assignments", addAssignmentHandler)
-		private.GET("/applications/assignments/:application-name", fetchAssignmentsByAppHandler)
-		private.GET("/assignments", fetchAssignmentsHandler)
-		private.DELETE("/assignments/:application-name/:assignment-title", removeAssignmentHandler)
-	}
+	r.POST("/applications", common.AuthMiddleware(), createApplicationHandler)
+	r.GET("/applications/", common.AuthMiddleware(), fetchApplicationsHandler)
+	r.GET("/applications/:name", common.AuthMiddleware(), getApplicationHandler)
+	r.PUT("/applications/:name", common.AuthMiddleware(), modifyApplicationHandler)
+	r.DELETE("/applications/:name", common.AuthMiddleware(), deleteApplicationHandler)
+
+	r.POST("/applications/:application-name/assignments", common.AuthMiddleware(), addAssignmentHandler)
+	r.GET("/applications/assignments/:application-name", common.AuthMiddleware(), fetchAssignmentsByAppHandler)
+	r.GET("/assignments", common.AuthMiddleware(), fetchAssignmentsHandler)
+	r.DELETE("/assignments/:application-name/:assignment-title", common.AuthMiddleware(), removeAssignmentHandler)
 
 	return r
 }

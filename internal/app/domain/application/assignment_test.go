@@ -1,4 +1,4 @@
-package assignment
+package application
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ func TestAssignmentJSONSerialization(t *testing.T) {
 	assignment, err := NewAssignment(
 		"get endpoint broken",
 		"fix the GET application endpoint",
-		1,
+		"gustavo",
 	)
 
 	assert.NoError(t, err)

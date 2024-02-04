@@ -1,21 +1,19 @@
 package application
 
 import (
-	"github.com/charmingruby/clize/internal/app/domain/assignment"
-	"github.com/charmingruby/clize/internal/app/domain/common"
 	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/pkg/uuid"
 )
 
-var ()
-
 func NewApplication(name, context string) (*Application, error) {
-	sts := common.Status()
+	sts := Status()
 
 	a := &Application{
+		ID:          uuid.GenerateUUID(),
 		Name:        name,
 		Status:      sts["done"],
 		Context:     context,
-		Assignments: []assignment.Assignment{},
+		Assignments: []Assignment{},
 	}
 
 	err := a.Validate()
@@ -27,16 +25,17 @@ func NewApplication(name, context string) (*Application, error) {
 }
 
 type Application struct {
-	Name        string                  `json:"name"`
-	Context     string                  `json:"context"`
-	Status      string                  `json:"status"`
-	Assignments []assignment.Assignment `json:"assignments"`
+	ID          string       `json:"id"`
+	Name        string       `json:"name"`
+	Context     string       `json:"context"`
+	Status      string       `json:"status"`
+	Assignments []Assignment `json:"assignments"`
 }
 
 func (a *Application) UpdateStatus(status string) error {
 	a.Status = status
 
-	if err := common.ValidateStatus(a.Status); err != nil {
+	if err := ValidateStatus(a.Status); err != nil {
 		return err
 	}
 
@@ -84,7 +83,7 @@ func (a *Application) Validate() error {
 		}
 	}
 
-	if err := common.ValidateStatus(a.Status); err != nil {
+	if err := ValidateStatus(a.Status); err != nil {
 		return err
 	}
 
@@ -92,7 +91,7 @@ func (a *Application) Validate() error {
 }
 
 func (a *Application) ProgressReview() {
-	sts := common.Status()
+	sts := Status()
 
 	if len(a.Assignments) == 0 {
 		a.Status = sts["done"]
@@ -100,4 +99,8 @@ func (a *Application) ProgressReview() {
 	}
 
 	a.Status = sts["awaiting"]
+}
+
+func (a *Application) SetAssignments(assignments []Assignment) {
+	a.Assignments = assignments
 }

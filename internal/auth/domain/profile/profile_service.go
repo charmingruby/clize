@@ -1,8 +1,8 @@
 package profile
 
 import (
+	"github.com/charmingruby/clize/pkg/cryptography"
 	"github.com/charmingruby/clize/pkg/errors"
-	"github.com/charmingruby/clize/pkg/hash"
 )
 
 type ProfileService struct {
@@ -46,7 +46,7 @@ func (ps *ProfileService) Login(
 		return err
 	}
 
-	err = hash.VerifyIfHashMatches(
+	err = cryptography.VerifyIfHashMatches(
 		profile.Password,
 		password,
 	)
