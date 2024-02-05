@@ -24,7 +24,7 @@ func authenticate() *cobra.Command {
 			}
 
 			if err := requests.Auth(username, password, "/sign-in"); err != nil {
-				log.Printf("%x", err)
+				log.Printf("Error: %s", err.Error())
 				os.Exit(1)
 			}
 		},

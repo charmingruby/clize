@@ -18,12 +18,14 @@ func doRequest(
 	}
 
 	if auth {
-		_, err := readCacheToken()
+		token, err := readCacheToken()
+
 		if err != nil {
 			log.Println("Cannot read cache token.")
 			return nil, err
 		}
 
+		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
 	}
 
 	return http.DefaultClient.Do(req)

@@ -42,7 +42,6 @@ func createTokenCache(body io.ReadCloser) error {
 	defer body.Close()
 	response, err := ioutil.ReadAll(body)
 	if err != nil {
-
 		return err
 	}
 
