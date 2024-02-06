@@ -11,7 +11,7 @@ import (
 func fetchAssignments() *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:   "assignments",
+		Use:   "aas",
 		Short: "Fetch all assignments",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := requests.FetchAssignments(); err != nil {
