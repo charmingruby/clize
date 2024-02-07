@@ -29,6 +29,6 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	r.GET("/applications/assignments/:application-name", common.AuthMiddleware(), fetchAssignmentsByAppHandler)
 	r.GET("/assignments", common.AuthMiddleware(), fetchAssignmentsHandler)
 	r.DELETE("/assignments/:application-name/:assignment-title", common.AuthMiddleware(), removeAssignmentHandler)
-
+	// r.PUT("/assignments/:assignment-id", common.AuthMiddleware(), ...)
 	return r
 }

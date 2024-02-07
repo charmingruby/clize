@@ -88,3 +88,7 @@ func (as *AssignmentService) RemoveAssignmentFromApplication(appName, assignment
 
 	return nil
 }
+
+func (as *AssignmentService) UpdateAssignment(id, name, context string) error {
+	return nil
+}

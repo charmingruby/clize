@@ -6,7 +6,7 @@ import (
 	"reflect"
 
 	"github.com/charmingruby/clize/internal/app/domain/application"
-	cErrors "github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +20,7 @@ type modifyApplicationResponse struct {
 	Message string `json:"message"`
 }
 
-var fieldsOptions = []string{
+var modifyAppFieldsOptions = []string{
 	"name", "context", "status",
 }
 
@@ -35,10 +35,9 @@ func NewModifyApplicationHandler(svc *application.ApplicationService) gin.Handle
 		}
 
 		if req.Name == "" && req.Context == "" && req.Status == "" {
-
-			err := cErrors.NotNullableBodyError{
-				Message: cErrors.NewNotNullableErrorMessage(fieldsOptions),
-				Fields:  fieldsOptions,
+			err := errors.NotNullableBodyError{
+				Message: errors.NewNotNullableErrorMessage(modifyAppFieldsOptions),
+				Fields:  modifyAppFieldsOptions,
 			}
 
 			ctx.JSON(http.StatusBadRequest, err)
@@ -49,9 +48,9 @@ func NewModifyApplicationHandler(svc *application.ApplicationService) gin.Handle
 			errType := reflect.TypeOf(err)
 
 			if errType.Name() == "ResourceNotFoundError" {
-				err := cErrors.ResourceNotFoundError{
+				err := errors.ResourceNotFoundError{
 					Entity:  "application",
-					Message: cErrors.NewResourceNotFoundErrorMessage("application"),
+					Message: errors.NewResourceNotFoundErrorMessage("application"),
 				}
 
 				ctx.JSON(http.StatusNotFound, err)
