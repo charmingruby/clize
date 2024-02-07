@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	cliui "github.com/charmingruby/clize/pkg/cli_ui"
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +25,7 @@ func authenticate() *cobra.Command {
 			}
 
 			if err := requests.Auth(username, password, "/sign-in"); err != nil {
-				log.Printf("Error: %s", err.Error())
+				cliui.PrintErrorResponse(err)
 				os.Exit(1)
 			}
 		},

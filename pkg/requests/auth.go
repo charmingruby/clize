@@ -7,6 +7,8 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+
+	cliui "github.com/charmingruby/clize/pkg/cli_ui"
 )
 
 type credentials struct {
@@ -28,6 +30,7 @@ func Auth(username, password, path string) error {
 
 	res, err := doRequest("POST", path, &credsBody, false)
 	if err != nil {
+		cliui.PrintServerError()
 		return err
 	}
 

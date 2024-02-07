@@ -14,6 +14,7 @@ func doRequest(
 
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
+
 		return nil, err
 	}
 

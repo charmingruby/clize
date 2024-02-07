@@ -16,23 +16,19 @@ import (
 func FetchAssignments() error {
 	res, err := doRequest(http.MethodGet, "/assignments", nil, true)
 	if err != nil {
-		println("erro na request")
+		cliui.PrintServerError()
 		return err
 	}
 
 	defer res.Body.Close()
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		println("erro no body")
-
 		return err
 	}
 
 	var assignments []application.Assignment
 	err = json.Unmarshal(data, &assignments)
 	if err != nil {
-		println("erro no unmarshal")
-
 		return err
 	}
 
