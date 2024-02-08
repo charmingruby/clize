@@ -41,8 +41,9 @@ func tableView(assignments []application.Assignment) {
 	var amountOfAssignmentsDone int
 	totalAssignments := len(assignments)
 
-	println(cliui.Header())
-	println(cliui.Title("Total Assignments"))
+	cliui.Header()
+	println(cliui.Gap())
+	cliui.Title("Total Assignments")
 	println(cliui.Gap())
 
 	sort.Slice(assignments, func(i, j int) bool {
@@ -76,5 +77,6 @@ func tableView(assignments []application.Assignment) {
 
 	println(cliui.Gap())
 	println(cliui.Content(fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone)))
+	println(cliui.Gap())
 	println(cliui.Footer())
 }

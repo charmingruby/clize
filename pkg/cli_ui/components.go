@@ -2,16 +2,17 @@ package cliui
 
 import "fmt"
 
-func Header() string {
-	return fmt.Sprintf("%s C l i z e", LimitatorPattern())
+func Header() {
+	fmt.Print(LimitatorPattern())
+	BoldWhite.Printf(" C l i z e\n")
 }
 
-func Title(title string) string {
-	return fmt.Sprintf("%s( %s )", Padding(), title)
+func Title(title string) {
+	BoldWhite.Printf("%s( %s )\n", Padding(), title)
 }
 
 func Padding() string {
-	return fmt.Sprintf("%s  ", SymbolPattern())
+	return fmt.Sprintf("%s    ", SymbolPattern())
 }
 
 func Gap() string {
@@ -19,7 +20,7 @@ func Gap() string {
 }
 
 func Content(content string) string {
-	return fmt.Sprintf("%s  %s", SymbolPattern(), content)
+	return fmt.Sprintf("%s%s", Padding(), content)
 }
 
 func Footer() string {

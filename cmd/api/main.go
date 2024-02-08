@@ -13,8 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var ApiPort = "8080"
-
 func main() {
 	// Load environment variables
 	cfg, err := config.LoadConfig()
@@ -59,10 +57,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = r.Run(":" + ApiPort)
+	err = r.Run(":" + cfg.Server.Port)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Server is running on %s", ApiPort)
+	fmt.Printf("Server is running on %s", cfg.Server.Port)
 }
