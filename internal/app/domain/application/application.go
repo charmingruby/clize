@@ -1,6 +1,7 @@
 package application
 
 import (
+	"github.com/charmingruby/clize/helpers"
 	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/charmingruby/clize/pkg/uuid"
 )
@@ -11,7 +12,7 @@ func NewApplication(name, context string) (*Application, error) {
 	a := &Application{
 		ID:          uuid.GenerateUUID(),
 		Name:        name,
-		Status:      sts["done"],
+		Status:      sts["awaiting"],
 		Context:     context,
 		Assignments: []Assignment{},
 	}
@@ -88,6 +89,12 @@ func (a *Application) Validate() error {
 	}
 
 	return nil
+}
+
+func (a *Application) Modify(name, context string) error {
+	a.Name = helpers.If[string](name == "", a.Name, name)
+	a.Context = helpers.If[string](context == "", a.Context, context)
+	return a.Validate()
 }
 
 func (a *Application) ProgressReview() {

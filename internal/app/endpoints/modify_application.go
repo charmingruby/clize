@@ -13,7 +13,6 @@ import (
 type modifyApplicationRequest struct {
 	Name    string `json:"name"`
 	Context string `json:"context"`
-	Status  string `json:"status"`
 }
 
 type modifyApplicationResponse struct {
@@ -21,7 +20,7 @@ type modifyApplicationResponse struct {
 }
 
 var modifyAppFieldsOptions = []string{
-	"name", "context", "status",
+	"name", "context",
 }
 
 func NewModifyApplicationHandler(svc *application.ApplicationService) gin.HandlerFunc {
@@ -34,7 +33,7 @@ func NewModifyApplicationHandler(svc *application.ApplicationService) gin.Handle
 			return
 		}
 
-		if req.Name == "" && req.Context == "" && req.Status == "" {
+		if req.Name == "" && req.Context == "" {
 			err := errors.NotNullableBodyError{
 				Message: errors.NewNotNullableErrorMessage(modifyAppFieldsOptions),
 				Fields:  modifyAppFieldsOptions,
@@ -44,7 +43,7 @@ func NewModifyApplicationHandler(svc *application.ApplicationService) gin.Handle
 			return
 		}
 
-		if err := svc.ModifyApplication(name, req.Name, req.Context, req.Status); err != nil {
+		if err := svc.ModifyApplication(name, req.Name, req.Context); err != nil {
 			errType := reflect.TypeOf(err)
 
 			if errType.Name() == "ResourceNotFoundError" {

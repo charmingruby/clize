@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmingruby/clize/helpers"
 	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/charmingruby/clize/pkg/uuid"
 )
@@ -92,6 +93,12 @@ func (a *Assignment) Validate() error {
 	}
 
 	return nil
+}
+
+func (a *Assignment) Modify(title, description string) error {
+	a.Title = helpers.If[string](title == "", a.Title, title)
+	a.Description = helpers.If[string](description == "", a.Description, description)
+	return a.Validate()
 }
 
 func formatTitle(title string) string {

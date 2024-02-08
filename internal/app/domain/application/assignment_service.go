@@ -89,6 +89,41 @@ func (as *AssignmentService) RemoveAssignmentFromApplication(appName, assignment
 	return nil
 }
 
-func (as *AssignmentService) UpdateAssignment(id, name, context string) error {
+func (as *AssignmentService) UpdateAssignment(id, applicationName, title, description string) error {
+	app, err := as.repo.FindByName(applicationName)
+	if err != nil {
+		return &errors.ResourceNotFoundError{
+			Entity:  "application",
+			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		}
+	}
+
+	var assignmentToModify *Assignment
+	var assignments []Assignment
+	for _, a := range app.Assignments {
+		if a.ID == id {
+			assignmentToModify = &a
+			continue
+		}
+
+		assignments = append(assignments, a)
+	}
+
+	if assignmentToModify == nil {
+		return &errors.ResourceNotFoundError{
+			Entity:  "assignment",
+			Message: errors.NewResourceNotFoundErrorMessage("assignment"),
+		}
+	}
+
+	if err := assignmentToModify.Modify(title, description); err != nil {
+		return err
+	}
+
+	assignments = append(assignments, *assignmentToModify)
+	app.Assignments = assignments
+
+	as.repo.Create(app)
+
 	return nil
 }

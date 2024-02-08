@@ -9,17 +9,18 @@ import (
 )
 
 type modifyAssignmentRequest struct {
-	Name    string `json:"name"`
-	Context string `json:"context"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 var modifyAssignmentFieldsOptions = []string{
-	"name", "context", "status", "solved at",
+	"title", "description",
 }
 
 func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id := ctx.Param("assignment-id")
+		assignmentId := ctx.Param("assignment-id")
+		applicationName := ctx.Param("application-name")
 
 		var req modifyAssignmentRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -32,16 +33,16 @@ func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			return
 		}
 
-		if req.Context == "" && req.Name == "" {
+		if req.Title == "" && req.Description == "" {
 			err := &errors.NotNullableBodyError{
-				Message: errors.NewNotNullableErrorMessage(modifyAppFieldsOptions),
+				Message: errors.NewNotNullableErrorMessage(modifyAssignmentFieldsOptions),
 				Fields:  modifyAssignmentFieldsOptions,
 			}
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
 
-		if err := svc.UpdateAssignment(id, req.Name, req.Context); err != nil {
+		if err := svc.UpdateAssignment(assignmentId, applicationName, req.Title, req.Description); err != nil {
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}

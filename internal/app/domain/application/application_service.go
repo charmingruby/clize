@@ -1,7 +1,6 @@
 package application
 
 import (
-	"github.com/charmingruby/clize/helpers"
 	"github.com/charmingruby/clize/pkg/errors"
 )
 
@@ -67,7 +66,7 @@ func (as *ApplicationService) DeleteApplication(name string) error {
 	return nil
 }
 
-func (as *ApplicationService) ModifyApplication(identifier, name, context, status string) error {
+func (as *ApplicationService) ModifyApplication(identifier, name, context string) error {
 	app, err := as.repo.FindByName(identifier)
 	if err != nil {
 		return err
@@ -77,25 +76,15 @@ func (as *ApplicationService) ModifyApplication(identifier, name, context, statu
 		as.repo.Delete(app.Name)
 	}
 
-	newApp := &Application{
-		Name:    helpers.If[string](name == "", app.Name, name),
-		Context: helpers.If[string](context == "", app.Context, context),
-		Status:  helpers.If[string](status == "", app.Status, status),
-	}
-
-	if status != "" {
-		if err := newApp.UpdateStatus(status); err != nil {
-			return err
-		}
-	}
-
-	if err := newApp.Validate(); err != nil {
+	if err := app.Modify(name, context); err != nil {
 		return err
 	}
 
-	if err := as.repo.Create(newApp); err != nil {
+	if err := as.repo.Delete(identifier); err != nil {
 		return err
 	}
+
+	as.repo.Create(app)
 
 	return nil
 }
