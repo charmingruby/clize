@@ -19,6 +19,7 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	fetchAssignmentsByAppHandler := endpoints.NewFetchAssignmentsByApplication(svc.AssignmentService)
 	removeAssignmentHandler := endpoints.NewRemoveAssignmentHandler(svc.AssignmentService)
 	modifyAssignmentHandler := endpoints.NewModifyAssignmentHandler(svc.AssignmentService)
+	submitAssignmentHandler := endpoints.NewSubmitAssignmentHandler(svc.AssignmentService)
 
 	r.POST("/applications", common.AuthMiddleware(), createApplicationHandler)
 	r.GET("/applications/", common.AuthMiddleware(), fetchApplicationsHandler)
@@ -27,9 +28,11 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	r.DELETE("/applications/:name", common.AuthMiddleware(), deleteApplicationHandler)
 
 	r.POST("/applications/:application-name/assignments", common.AuthMiddleware(), addAssignmentHandler)
+	r.PUT("/submit/:application-name/:assignment-id", common.AuthMiddleware(), submitAssignmentHandler)
 	r.PUT("/assignments/:application-name/:assignment-id", common.AuthMiddleware(), modifyAssignmentHandler)
 	r.GET("/applications/assignments/:application-name", common.AuthMiddleware(), fetchAssignmentsByAppHandler)
 	r.GET("/assignments", common.AuthMiddleware(), fetchAssignmentsHandler)
 	r.DELETE("/assignments/:application-name/:assignment-title", common.AuthMiddleware(), removeAssignmentHandler)
+
 	return r
 }

@@ -101,6 +101,14 @@ func (a *Assignment) Modify(title, description string) error {
 	return a.Validate()
 }
 
+func (a *Assignment) Submit() {
+	sts := Status()
+	now := time.Now()
+
+	a.Status = sts["done"]
+	a.SolvedAt = &now
+}
+
 func formatTitle(title string) string {
 	return strings.ReplaceAll(title, " ", "_")
 }

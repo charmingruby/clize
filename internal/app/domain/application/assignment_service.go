@@ -127,3 +127,40 @@ func (as *AssignmentService) UpdateAssignment(id, applicationName, title, descri
 
 	return nil
 }
+
+func (as *AssignmentService) SubmitAssignment(applicationName, assignmentId string) error {
+	app, err := as.repo.FindByName(applicationName)
+	if err != nil {
+		return &errors.ResourceNotFoundError{
+			Entity:  "application",
+			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		}
+	}
+
+	var assignmentToSubmit *Assignment
+	var assignments []Assignment
+	for _, a := range app.Assignments {
+		if a.ID == assignmentId {
+			assignmentToSubmit = &a
+			continue
+		}
+
+		assignments = append(assignments, a)
+	}
+
+	if assignmentToSubmit == nil {
+		return &errors.ResourceNotFoundError{
+			Entity:  "assignment",
+			Message: errors.NewResourceNotFoundErrorMessage("assignment"),
+		}
+	}
+
+	assignmentToSubmit.Submit()
+
+	assignments = append(assignments, *assignmentToSubmit)
+	app.Assignments = assignments
+
+	as.repo.Create(app)
+
+	return nil
+}
