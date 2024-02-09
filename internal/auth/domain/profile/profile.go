@@ -44,7 +44,6 @@ func (p *Profile) ChangePassword(password string) error {
 }
 
 func encPass(p *Profile) error {
-	// validates
 
 	hashedPassword, err := cryptography.GenerateHash(p.Password)
 	if err != nil {

@@ -9,22 +9,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func authenticate() *cobra.Command {
+func register() *cobra.Command {
 	var (
 		username string
+		email    string
 		password string
 	)
 
 	cmd := &cobra.Command{
-		Use:   "auth",
-		Short: "Authenticates an user",
+		Use:   "register",
+		Short: "Registers a new user",
 		Run: func(cmd *cobra.Command, args []string) {
-			if username == "" || password == "" {
-				color.Red("username and password are required")
+			if username == "" && email == "" && password == "" {
+				color.Red("username, email and password are required")
 				os.Exit(1)
 			}
 
-			if err := requests.Auth(username, password, "/sign-in"); err != nil {
+			if err := requests.Register(username, email, password); err != nil {
 				cliui.PrintErrorResponse(err)
 				os.Exit(1)
 			}
@@ -32,6 +33,7 @@ func authenticate() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&username, "username", "u", "", "username")
+	cmd.Flags().StringVarP(&email, "email", "e", "", "email")
 	cmd.Flags().StringVarP(&password, "password", "p", "", "password")
 
 	return cmd
