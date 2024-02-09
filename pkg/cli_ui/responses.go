@@ -8,6 +8,6 @@ func PrintServerError() {
 }
 
 func PrintErrorResponse(err error) {
-	print(Padding())
+	Padding()
 	color.Red(err.Error())
 }

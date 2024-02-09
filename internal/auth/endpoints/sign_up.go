@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/auth/domain"
@@ -40,7 +41,7 @@ func NewSignUpHandler(svc *domain.Service) gin.HandlerFunc {
 
 		ctx.JSON(
 			http.StatusCreated,
-			common.NewCreatedResponse("profile"),
+			common.NewCreatedResponse(fmt.Sprintf("%s's %s", req.Username, "profile")),
 		)
 	}
 }

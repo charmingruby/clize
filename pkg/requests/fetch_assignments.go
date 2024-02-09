@@ -3,6 +3,7 @@ package requests
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"sort"
@@ -13,6 +14,10 @@ import (
 	"github.com/fatih/color"
 )
 
+type fetchAssignmentsOutput struct {
+	Assignments []application.Assignment `json:"assignments"`
+}
+
 func FetchAssignments() error {
 	res, err := doRequest(http.MethodGet, "/assignments", nil, true)
 	if err != nil {
@@ -20,31 +25,42 @@ func FetchAssignments() error {
 		return err
 	}
 
-	defer res.Body.Close()
-	data, err := ioutil.ReadAll(res.Body)
+	op, err := decodeFetchAssignments(res.Body)
 	if err != nil {
 		return err
+	}
+
+	runFetchAssignmentsView(op.Assignments)
+
+	return nil
+}
+
+func decodeFetchAssignments(body io.ReadCloser) (*fetchAssignmentsOutput, error) {
+	defer body.Close()
+	data, err := ioutil.ReadAll(body)
+	if err != nil {
+		return nil, err
 	}
 
 	var assignments []application.Assignment
 	err = json.Unmarshal(data, &assignments)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	tableView(assignments)
-
-	return nil
+	return &fetchAssignmentsOutput{
+		Assignments: assignments,
+	}, nil
 }
 
-func tableView(assignments []application.Assignment) {
+func runFetchAssignmentsView(assignments []application.Assignment) {
 	var amountOfAssignmentsDone int
 	totalAssignments := len(assignments)
 
 	cliui.Header()
-	println(cliui.Gap())
+	cliui.Gap()
 	cliui.Title("Total Assignments")
-	println(cliui.Gap())
+	cliui.Gap()
 
 	sort.Slice(assignments, func(i, j int) bool {
 		if assignments[i].Status == "done" && assignments[j].Status != "done" {
@@ -62,21 +78,21 @@ func tableView(assignments []application.Assignment) {
 		status := helpers.If[string](isAssignmentDone, "[x]", "[ ]")
 
 		if isAssignmentDone {
-			print(cliui.Padding())
+			cliui.Padding()
 			color.Green("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreateAt.Format("2006/01/02"))
+
 			amountOfAssignmentsDone++
 			continue
 		}
 
-		print(cliui.Padding())
-
+		cliui.Padding()
 		color.Red("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreateAt.Format("2006/01/02"))
 
 	}
 	percentageOfAssignmentsDone := (float64(amountOfAssignmentsDone) / float64(totalAssignments)) * 100
 
-	println(cliui.Gap())
-	println(cliui.Content(fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone)))
-	println(cliui.Gap())
-	println(cliui.Footer())
+	cliui.Gap()
+	cliui.Content(fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone))
+	cliui.Gap()
+	cliui.Footer()
 }

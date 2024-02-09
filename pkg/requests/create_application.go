@@ -3,7 +3,6 @@ package requests
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,21 +11,19 @@ import (
 	"github.com/fatih/color"
 )
 
-type registerInput struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+type createApplicationInput struct {
+	Name    string `json:"name"`
+	Context string `json:"context"`
 }
 
-type registerOutput struct {
+type createApplicationOutput struct {
 	Message string `json:"message"`
 }
 
-func Register(username, email, password string) error {
-	inputs := registerInput{
-		Username: username,
-		Email:    email,
-		Password: password,
+func CreateApplication(name, context string) error {
+	inputs := createApplicationInput{
+		Name:    name,
+		Context: context,
 	}
 
 	var inputBody bytes.Buffer
@@ -34,34 +31,29 @@ func Register(username, email, password string) error {
 		return err
 	}
 
-	res, err := doRequest(http.MethodPost, "/sign-up", &inputBody, false)
-	if err != nil {
-		cliui.PrintServerError()
-		return err
-	}
-
-	if res.StatusCode != http.StatusCreated {
-		return errors.New("unable to create")
-	}
-
-	op, err := decodeRegisterBody(res.Body)
+	res, err := doRequest(http.MethodPost, "/applications", &inputBody, true)
 	if err != nil {
 		return err
 	}
 
-	runRegisterView(op)
+	op, err := decodeCreateApplicationBody(res.Body)
+	if err != nil {
+		return err
+	}
+
+	runCreateApplicationView(op)
 
 	return nil
 }
 
-func decodeRegisterBody(body io.ReadCloser) (*registerOutput, error) {
+func decodeCreateApplicationBody(body io.ReadCloser) (*createApplicationOutput, error) {
 	defer body.Close()
 	response, err := ioutil.ReadAll(body)
 	if err != nil {
 		return nil, err
 	}
 
-	var parsedResponse registerOutput
+	var parsedResponse createApplicationOutput
 	if err := json.Unmarshal(response, &parsedResponse); err != nil {
 		return nil, err
 	}
@@ -69,7 +61,7 @@ func decodeRegisterBody(body io.ReadCloser) (*registerOutput, error) {
 	return &parsedResponse, nil
 }
 
-func runRegisterView(op *registerOutput) {
+func runCreateApplicationView(op *createApplicationOutput) {
 	cliui.Header()
 	cliui.Gap()
 

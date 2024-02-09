@@ -17,7 +17,3 @@ build-cli:
 .PHONY: build-api
 build-api:
 	go build -o api cmd/api/main.go
-
-.PHONY: run
-run:
-	api
