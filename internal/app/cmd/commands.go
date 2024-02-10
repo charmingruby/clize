@@ -7,4 +7,5 @@ func SetCommands(c *cobra.Command) {
 	c.AddCommand(fetchAssignments())
 	c.AddCommand(fetchApplications())
 	c.AddCommand(getApplication())
+	c.AddCommand(deleteApplication())
 }

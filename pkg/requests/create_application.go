@@ -40,7 +40,7 @@ func CreateApplication(name, context string) error {
 		return err
 	}
 
-	runCreateApplicationView(op)
+	terminal.PrintSuccessMsgResponse(op.Message)
 
 	return nil
 }
@@ -58,15 +58,4 @@ func decodeCreateApplicationBody(body io.ReadCloser) (*createApplicationOutput, 
 	}
 
 	return &parsedResponse, nil
-}
-
-func runCreateApplicationView(op *createApplicationOutput) {
-	terminal.Header()
-	terminal.Gap()
-
-	terminal.Padding()
-	terminal.BoldGreen.Printf(op.Message)
-
-	terminal.Gap()
-	terminal.Footer()
 }

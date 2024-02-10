@@ -30,7 +30,7 @@ func GetApplication(name string) error {
 	}
 
 	if res.StatusCode == http.StatusNotFound {
-		runNotFoundApplicationView(name)
+		terminal.PrintNotFoundResponse(name)
 		return err
 	}
 
@@ -107,17 +107,6 @@ func runGetApplicationView(app *application.Application) {
 	}
 
 	terminal.Content("]")
-
-	terminal.Gap()
-	terminal.Footer()
-}
-
-func runNotFoundApplicationView(name string) {
-	terminal.Header()
-	terminal.Gap()
-
-	terminal.Padding()
-	terminal.BoldRed.Printf("%s not found\n", name)
 
 	terminal.Gap()
 	terminal.Footer()
