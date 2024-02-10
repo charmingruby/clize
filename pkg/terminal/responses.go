@@ -1,4 +1,4 @@
-package cliui
+package terminal
 
 import "github.com/fatih/color"
 

@@ -7,10 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type getApplicationResponse struct {
-	Application *application.Application `json:"application"`
-}
-
 func NewGetApplicationHandler(svc *application.ApplicationService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		name := ctx.Param("name")
@@ -21,10 +17,6 @@ func NewGetApplicationHandler(svc *application.ApplicationService) gin.HandlerFu
 			return
 		}
 
-		res := &getApplicationResponse{
-			Application: app,
-		}
-
-		ctx.JSON(http.StatusOK, res)
+		ctx.JSON(http.StatusOK, app)
 	}
 }

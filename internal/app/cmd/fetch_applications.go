@@ -1,24 +1,22 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
-	cliui "github.com/charmingruby/clize/pkg/cli_ui"
-	"github.com/charmingruby/clize/pkg/cmd"
 	"github.com/charmingruby/clize/pkg/requests"
+	"github.com/charmingruby/clize/pkg/terminal"
 	"github.com/spf13/cobra"
 )
 
 func fetchApplications() *cobra.Command {
 
-	// appftc
+	// app-ftc
 	cmd := &cobra.Command{
-		Use:   fmt.Sprintf("%s%s", ApplicationActor, cmd.FetchCmd),
+		Use:   terminal.CommandWrapper(ApplicationActor, terminal.FetchCmd),
 		Short: "Fetch all applications",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := requests.FetchApplications(); err != nil {
-				cliui.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err)
 				os.Exit(1)
 			}
 		},

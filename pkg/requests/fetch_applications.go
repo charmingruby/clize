@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/app/domain/application"
-	cliui "github.com/charmingruby/clize/pkg/cli_ui"
+	"github.com/charmingruby/clize/pkg/terminal"
 )
 
 type fetchApplicationsOutput struct {
@@ -50,16 +50,16 @@ func decodeFetchApplications(body io.ReadCloser) (*fetchApplicationsOutput, erro
 }
 
 func runFetchApplicationsView(apps []application.Application) {
-	cliui.Header()
-	cliui.Gap()
-	cliui.Title("All Applications")
-	cliui.Gap()
+	terminal.Header()
+	terminal.Gap()
+	terminal.Title("All Applications")
+	terminal.Gap()
 
 	for idx, a := range apps {
 
-		cliui.Content(fmt.Sprintf("%d. %s %s: (%s)", idx+1, a.ID, a.Name, a.CreatedAt.Format("2006/01/02")))
+		terminal.Content(fmt.Sprintf("%d. %s %s: (%s)", idx+1, a.ID, a.Name, a.CreatedAt.Format("2006/01/02")))
 	}
 
-	cliui.Gap()
-	cliui.Footer()
+	terminal.Gap()
+	terminal.Footer()
 }

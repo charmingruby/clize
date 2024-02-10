@@ -7,8 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	cliui "github.com/charmingruby/clize/pkg/cli_ui"
-	"github.com/fatih/color"
+	"github.com/charmingruby/clize/pkg/terminal"
 )
 
 type createApplicationInput struct {
@@ -62,12 +61,12 @@ func decodeCreateApplicationBody(body io.ReadCloser) (*createApplicationOutput, 
 }
 
 func runCreateApplicationView(op *createApplicationOutput) {
-	cliui.Header()
-	cliui.Gap()
+	terminal.Header()
+	terminal.Gap()
 
-	cliui.Padding()
-	color.Green(op.Message)
+	terminal.Padding()
+	terminal.BoldGreen.Printf(op.Message)
 
-	cliui.Gap()
-	cliui.Footer()
+	terminal.Gap()
+	terminal.Footer()
 }

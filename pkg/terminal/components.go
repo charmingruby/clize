@@ -1,6 +1,14 @@
-package cliui
+package terminal
 
 import "fmt"
+
+func SymbolPattern() string {
+	return "~"
+}
+
+func LimitatorPattern() string {
+	return fmt.Sprintf("%s# ", SymbolPattern())
+}
 
 func paddingPattern() string {
 	return fmt.Sprintf("%s    ", SymbolPattern())
@@ -13,6 +21,18 @@ func Header() {
 
 func Title(title string) {
 	BoldWhite.Printf("%s( %s )\n", paddingPattern(), title)
+}
+
+func Tab(tabs int) {
+	tab := "  "
+
+	var tabsToIdent string
+
+	for i := 0; i < tabs; i++ {
+		tabsToIdent = tabsToIdent + tab
+	}
+
+	print(tabsToIdent)
 }
 
 func Padding() {

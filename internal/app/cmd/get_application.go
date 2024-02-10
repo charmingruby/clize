@@ -9,32 +9,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func createApplication() *cobra.Command {
+func getApplication() *cobra.Command {
 	var (
-		name    string
-		context string
+		name string
 	)
 
-	// appcrt
+	// appget
 	cmd := &cobra.Command{
-		Use:   terminal.CommandWrapper(ApplicationActor, terminal.CreateCmd),
-		Short: "Creates a new application",
+		Use:   terminal.CommandWrapper(ApplicationActor, terminal.GetCmd),
+		Short: "Get an applications",
 		Run: func(cmd *cobra.Command, args []string) {
-			if name == "" && context == "" {
-				color.Red("name and context are required")
+			if name == "" {
+				color.Red("name are required")
 				os.Exit(1)
 			}
 
-			if err := requests.CreateApplication(name, context); err != nil {
+			if err := requests.GetApplication(name); err != nil {
 				terminal.PrintErrorResponse(err)
 				os.Exit(1)
 			}
-
 		},
 	}
 
 	cmd.Flags().StringVarP(&name, "name", "n", "", "name")
-	cmd.Flags().StringVarP(&context, "context", "c", "", "context")
 
 	return cmd
 }

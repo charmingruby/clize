@@ -12,7 +12,6 @@ func NewFetchAssignmentsHandler(svc *application.AssignmentService) gin.HandlerF
 		assignments, err := svc.FetchAssignment()
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-
 			return
 		}
 

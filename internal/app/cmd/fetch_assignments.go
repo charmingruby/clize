@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
-	cliui "github.com/charmingruby/clize/pkg/cli_ui"
-	"github.com/charmingruby/clize/pkg/cmd"
 	"github.com/charmingruby/clize/pkg/requests"
+	"github.com/charmingruby/clize/pkg/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -14,11 +12,11 @@ func fetchAssignments() *cobra.Command {
 
 	// asftc
 	cmd := &cobra.Command{
-		Use:   fmt.Sprintf("%s%s", AssignmentActor, cmd.FetchCmd),
+		Use:   terminal.CommandWrapper(AssignmentActor, terminal.FetchCmd),
 		Short: "Fetch all assignments",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := requests.FetchAssignments(); err != nil {
-				cliui.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err)
 				os.Exit(1)
 			}
 		},

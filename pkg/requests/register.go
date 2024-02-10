@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	cliui "github.com/charmingruby/clize/pkg/cli_ui"
+	terminal "github.com/charmingruby/clize/pkg/terminal"
 	"github.com/fatih/color"
 )
 
@@ -36,7 +36,7 @@ func Register(username, email, password string) error {
 
 	res, err := doRequest(http.MethodPost, "/sign-up", &inputBody, false)
 	if err != nil {
-		cliui.PrintServerError()
+		terminal.PrintServerError()
 		return err
 	}
 
@@ -70,12 +70,12 @@ func decodeRegisterBody(body io.ReadCloser) (*registerOutput, error) {
 }
 
 func runRegisterView(op *registerOutput) {
-	cliui.Header()
-	cliui.Gap()
+	terminal.Header()
+	terminal.Gap()
 
-	cliui.Padding()
+	terminal.Padding()
 	color.Green(op.Message)
 
-	cliui.Gap()
-	cliui.Footer()
+	terminal.Gap()
+	terminal.Footer()
 }

@@ -3,8 +3,8 @@ package cmd
 import (
 	"os"
 
-	cliui "github.com/charmingruby/clize/pkg/cli_ui"
 	"github.com/charmingruby/clize/pkg/requests"
+	"github.com/charmingruby/clize/pkg/terminal"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -25,7 +25,7 @@ func authenticate() *cobra.Command {
 			}
 
 			if err := requests.Auth(username, password, "/sign-in"); err != nil {
-				cliui.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err)
 				os.Exit(1)
 			}
 		},
