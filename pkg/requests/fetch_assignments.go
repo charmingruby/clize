@@ -69,7 +69,7 @@ func runFetchAssignmentsView(assignments []application.Assignment) {
 		if assignments[i].Status != "done" && assignments[j].Status == "done" {
 			return false
 		}
-		return assignments[i].CreateAt.Before(assignments[j].CreateAt)
+		return assignments[i].CreatedAt.Before(assignments[j].CreatedAt)
 	})
 
 	for idx, a := range assignments {
@@ -79,14 +79,14 @@ func runFetchAssignmentsView(assignments []application.Assignment) {
 
 		if isAssignmentDone {
 			cliui.Padding()
-			color.Green("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreateAt.Format("2006/01/02"))
+			color.Green("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreatedAt.Format("2006/01/02"))
 
 			amountOfAssignmentsDone++
 			continue
 		}
 
 		cliui.Padding()
-		color.Red("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreateAt.Format("2006/01/02"))
+		color.Red("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreatedAt.Format("2006/01/02"))
 
 	}
 	percentageOfAssignmentsDone := (float64(amountOfAssignmentsDone) / float64(totalAssignments)) * 100

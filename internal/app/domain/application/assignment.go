@@ -20,7 +20,7 @@ func NewAssignment(title, description, createdBy string) (*Assignment, error) {
 		Description: description,
 		CreatedBy:   createdBy,
 		Status:      sts["awaiting"],
-		CreateAt:    time.Now(),
+		CreatedAt:   time.Now(),
 		SignedBy:    "",
 		SolvedAt:    nil,
 	}
@@ -39,7 +39,7 @@ type Assignment struct {
 	Status      string     `json:"status"`
 	CreatedBy   string     `json:"created_by"`
 	SignedBy    string     `json:"signed_by,omitempty"`
-	CreateAt    time.Time  `json:"create_at"`
+	CreatedAt   time.Time  `json:"create_at"`
 	SolvedAt    *time.Time `json:"solved_at,omitempty"`
 }
 

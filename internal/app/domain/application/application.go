@@ -1,6 +1,8 @@
 package application
 
 import (
+	"time"
+
 	"github.com/charmingruby/clize/helpers"
 	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/charmingruby/clize/pkg/uuid"
@@ -15,6 +17,7 @@ func NewApplication(name, context string) (*Application, error) {
 		Status:      sts["awaiting"],
 		Context:     context,
 		Assignments: []Assignment{},
+		CreatedAt:   time.Now(),
 	}
 
 	err := a.Validate()
@@ -31,6 +34,7 @@ type Application struct {
 	Context     string       `json:"context"`
 	Status      string       `json:"status"`
 	Assignments []Assignment `json:"assignments"`
+	CreatedAt   time.Time    `json:"created_at"`
 }
 
 func (a *Application) UpdateStatus(status string) error {

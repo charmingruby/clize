@@ -7,10 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type fetchApplicationResponse struct {
-	Applications []*application.Application `json:"applications"`
-}
-
 func NewFetchApplicationsHandler(svc *application.ApplicationService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		apps, err := svc.FetchApplication()
@@ -19,10 +15,6 @@ func NewFetchApplicationsHandler(svc *application.ApplicationService) gin.Handle
 			return
 		}
 
-		res := &fetchApplicationResponse{
-			Applications: apps,
-		}
-
-		ctx.JSON(http.StatusOK, res)
+		ctx.JSON(http.StatusOK, apps)
 	}
 }
