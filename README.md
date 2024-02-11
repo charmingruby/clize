@@ -1,6 +1,6 @@
 # 🏗️ clize
 
-CLI for internal projects team, providing quick communication and documentation, made using Go, Gin, Redis and Cobra.
+CLI for internal projects team, providing quick communication, made using Go, Gin, Redis and Cobra.
 
 > 🔥 This project aims to make it easier to developers communicate between a lot of projects assignments, centralizing them and faciliting the feedbacks.
 
@@ -20,10 +20,3 @@ CLI for internal projects team, providing quick communication and documentation,
 - it should be able to create a new assignment
 - it should be able manage an assignment
 - it should be able to change assignment status
-
-#### Documentation
-
-- it should be able to create a document
-- it should be able to add a topic to a document
-- it should be able to add a content to a topic
-- it should be able to generate a documentation of a document in .md file

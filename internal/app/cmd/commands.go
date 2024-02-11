@@ -8,4 +8,6 @@ func SetCommands(c *cobra.Command) {
 	c.AddCommand(fetchApplications())
 	c.AddCommand(getApplication())
 	c.AddCommand(deleteApplication())
+	c.AddCommand(modifyApplication())
+	c.AddCommand(addAssignment())
 }
