@@ -9,7 +9,7 @@ import (
 	"sort"
 
 	"github.com/charmingruby/clize/helpers"
-	"github.com/charmingruby/clize/internal/app/domain/application"
+	"github.com/charmingruby/clize/internal/domain/application"
 	"github.com/charmingruby/clize/pkg/terminal"
 	"github.com/fatih/color"
 )

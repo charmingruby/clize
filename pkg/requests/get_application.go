@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/charmingruby/clize/internal/app/domain/application"
+	"github.com/charmingruby/clize/internal/domain/application"
 	"github.com/charmingruby/clize/pkg/terminal"
 )
 

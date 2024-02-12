@@ -5,9 +5,7 @@ import (
 	"log"
 
 	"github.com/charmingruby/clize/config"
-	"github.com/charmingruby/clize/internal/app"
-	"github.com/charmingruby/clize/internal/auth"
-	"github.com/charmingruby/clize/internal/common"
+	"github.com/charmingruby/clize/internal"
 
 	rdb "github.com/charmingruby/clize/pkg/database/redis"
 	"github.com/gin-gonic/gin"
@@ -27,12 +25,7 @@ func main() {
 	}
 
 	// Services
-	appService, err := app.NewService(rc)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	authSvc, err := auth.NewService(rc)
+	appService, err := internal.NewService(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,17 +35,7 @@ func main() {
 	r := gin.Default()
 
 	// Handlers
-	r, err = app.NewHTTPService(r, appService)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	r, err = auth.NewHTTPService(r, authSvc)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	r, err = common.NewHTTPService(r)
+	r, err = internal.NewHTTPService(r, appService)
 	if err != nil {
 		log.Fatal(err)
 	}
