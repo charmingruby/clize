@@ -5,7 +5,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/charmingruby/clize/pkg/terminal"
 	jwt "github.com/charmingruby/clize/pkg/token"
 )
 
@@ -28,7 +30,8 @@ func doRequest(
 		}
 
 		if isTokenValid := jwt.NewJwtService().ValidateToken(token); !isTokenValid {
-			return nil, err
+			terminal.PrintErrorResponse(fmt.Errorf("cannot validate token"))
+			os.Exit(1)
 		}
 
 		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
