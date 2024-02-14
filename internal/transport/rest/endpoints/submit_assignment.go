@@ -1,11 +1,16 @@
 package endpoints
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
 	"github.com/gin-gonic/gin"
 )
+
+type submitAssignmentResponse struct {
+	Message string `json:"message"`
+}
 
 func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -17,6 +22,10 @@ func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			return
 		}
 
-		ctx.Status(http.StatusOK)
+		res := &submitAssignmentResponse{
+			Message: fmt.Sprintf("%s: %s submitted successfully", appName, assignmentId),
+		}
+
+		ctx.JSON(http.StatusOK, res)
 	}
 }

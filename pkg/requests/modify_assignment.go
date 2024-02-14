@@ -12,69 +12,57 @@ import (
 	"github.com/charmingruby/clize/pkg/terminal"
 )
 
-type modifyApplicationInput struct {
-	Name    string `json:"name"`
-	Context string `json:"context"`
+type modifyAssignmentInput struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
-type modifyApplicationOutput struct {
+type modifyAssignmentOutput struct {
 	Message string `json:"message"`
 }
 
-func ModifyApp(appName, name, context string) error {
-	inputs := modifyApplicationInput{
-		Name:    helpers.If[string](name != "", name, ""),
-		Context: helpers.If[string](context != "", context, ""),
+func ModifyAssignment(appName, assignmentID, title, description string) error {
+	inputs := modifyAssignmentInput{
+		Title:       helpers.If[string](title != "", title, ""),
+		Description: helpers.If[string](description != "", description, ""),
 	}
 
-	println("aqui1")
-
-	println(appName)
-	println(name)
-	println(context)
+	url := fmt.Sprintf("/submit/%s/%s", appName, assignmentID)
 
 	var inputBody bytes.Buffer
 	if err := json.NewEncoder(&inputBody).Encode(inputs); err != nil {
 		return err
 	}
 
-	println("aqui2")
-
-	req, err := doRequest(http.MethodPut, fmt.Sprintf("/applications/%s", appName), &inputBody, true)
+	req, err := doRequest(http.MethodPut, url, &inputBody, true)
 	if err != nil {
 		terminal.PrintServerError()
 		return err
 	}
-
-	println("aqui3")
 
 	if req.StatusCode == http.StatusBadRequest {
 		terminal.PrintNotFoundResponse(appName)
 		return err
 	}
 
-	println("aqui4")
-
-	op, err := decodeModifyAppBody(req.Body)
+	op, err := decodeModifyAssignmentBody(req.Body)
 	if err != nil {
 		return err
 	}
-
-	println("aqui5")
 
 	terminal.PrintSuccessMsgResponse(op.Message)
 
 	return nil
 }
 
-func decodeModifyAppBody(body io.ReadCloser) (*modifyApplicationOutput, error) {
+func decodeModifyAssignmentBody(body io.ReadCloser) (*modifyAssignmentOutput, error) {
 	defer body.Close()
 	result, err := ioutil.ReadAll(body)
 	if err != nil {
 		return nil, err
 	}
 
-	var parsedResponse modifyApplicationOutput
+	var parsedResponse modifyAssignmentOutput
 	if err := json.Unmarshal(result, &parsedResponse); err != nil {
 		return nil, err
 	}

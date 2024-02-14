@@ -16,6 +16,8 @@ func SetCommands(c *cobra.Command) {
 	c.AddCommand(register())
 
 	c.AddCommand(modifyApplication())
+	c.AddCommand(modifyAssignment())
+	c.AddCommand(submitAssignment())
 
 	c.AddCommand(deleteApplication())
 	c.AddCommand(removeAssignment())
