@@ -27,6 +27,15 @@ func FetchAssignmentsByApplication(appName string) error {
 		return err
 	}
 
+	statusCode := res.StatusCode
+	if statusCode != http.StatusOK {
+		if statusCode == http.StatusNotFound {
+			errRes := decodeNotFoundError(res.Body)
+			terminal.PrintErrorResponse(errRes)
+			return err
+		}
+	}
+
 	op, err := decodeFetchAssignmentsByAppBody(res.Body)
 	if err != nil {
 		return err
@@ -38,6 +47,8 @@ func FetchAssignmentsByApplication(appName string) error {
 }
 
 func runFetchAssignmentsByAppView(appName string, assignments []application.Assignment) {
+	terminal.ClearTerminal()
+
 	var amountOfAssignmentsDone int
 	totalAssignments := len(assignments)
 
