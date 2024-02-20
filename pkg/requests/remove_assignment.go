@@ -25,9 +25,18 @@ func RemoveAssignment(appName, assignmentName string) error {
 	url := fmt.Sprintf("/assignments/%s/%s", inputs.AppName, inputs.Assignment)
 
 	res, err := doRequest(http.MethodDelete, url, nil, true)
-	if res.StatusCode == http.StatusNotFound {
-		terminal.PrintNotFoundResponse(inputs.Assignment)
-		return err
+	statusCode := res.StatusCode
+
+	if statusCode != http.StatusOK {
+		if statusCode == http.StatusNotFound {
+			errRes := decodeNotFoundError(res.Body)
+			terminal.PrintErrorResponse(errRes)
+			return err
+		}
+
+		if statusCode == http.StatusBadRequest {
+			return err
+		}
 	}
 
 	op, err := decodeRemoveAssignmentBody(res.Body)

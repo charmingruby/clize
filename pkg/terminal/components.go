@@ -3,11 +3,11 @@ package terminal
 import "fmt"
 
 func SymbolPattern() string {
-	return "~"
+	return "~#>"
 }
 
 func LimitatorPattern() string {
-	return fmt.Sprintf("%s# ", SymbolPattern())
+	return fmt.Sprintf("%s ", SymbolPattern())
 }
 
 func paddingPattern() string {
@@ -20,7 +20,8 @@ func Header() {
 }
 
 func Title(title string) {
-	BoldWhite.Printf("%s( %s )\n", paddingPattern(), title)
+	fmt.Print(paddingPattern())
+	BoldWhite.Printf("( %s )\n", title)
 }
 
 func Tab(tabs int) {

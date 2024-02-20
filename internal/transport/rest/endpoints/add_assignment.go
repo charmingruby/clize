@@ -34,6 +34,12 @@ func NewAddAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc
 		createdBy := "static profile"
 
 		if err := svc.AddAssignment(applicationName, req.Title, req.Description, createdBy); err != nil {
+			rnf, ok := err.(*errors.ResourceNotFoundError)
+			if ok {
+				ctx.JSON(http.StatusNotFound, rnf)
+				return
+			}
+
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}

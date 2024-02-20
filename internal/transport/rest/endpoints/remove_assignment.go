@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
+	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +22,14 @@ func NewRemoveAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			appName,
 			assignmentName,
 		); err != nil {
-			ctx.Status(http.StatusBadRequest)
+
+			rnf, ok := err.(*errors.ResourceNotFoundError)
+			if ok {
+				ctx.JSON(http.StatusNotFound, rnf)
+				return
+			}
+
+			ctx.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 

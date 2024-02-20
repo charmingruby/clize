@@ -8,8 +8,15 @@ func PrintServerError() {
 }
 
 func PrintErrorResponse(err error) {
+	ClearTerminal()
+	Header()
+	Gap()
+
 	Padding()
-	color.Red(err.Error())
+	BoldRed.Printf("%s\n", err.Error())
+
+	Gap()
+	Footer()
 }
 
 func PrintNotFoundResponse(identifier string) {
@@ -24,6 +31,7 @@ func PrintNotFoundResponse(identifier string) {
 }
 
 func PrintSuccessMsgResponse(msg string) {
+	ClearTerminal()
 	Header()
 	Gap()
 

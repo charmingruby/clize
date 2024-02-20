@@ -1,6 +1,10 @@
 package terminal
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"os/exec"
+)
 
 const FetchCmd = "ftc"
 const GetCmd = "get"
@@ -14,4 +18,10 @@ const SubmitCmd = "sub"
 func CommandWrapper(actor, action string) string {
 	wp := fmt.Sprintf("%s-%s", actor, action)
 	return wp
+}
+
+func ClearTerminal() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }

@@ -50,6 +50,8 @@ func decodeFetchApplications(body io.ReadCloser) (*fetchApplicationsOutput, erro
 }
 
 func runFetchApplicationsView(apps []application.Application) {
+	terminal.ClearTerminal()
+
 	terminal.Header()
 	terminal.Gap()
 	terminal.Title("All Applications")
