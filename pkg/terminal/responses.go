@@ -13,7 +13,7 @@ func PrintErrorResponse(err error) {
 	Gap()
 
 	Padding()
-	BoldRed.Printf("%s\n", err.Error())
+	BoldRed.Printf("❌ %s\n", err.Error())
 
 	Gap()
 	Footer()

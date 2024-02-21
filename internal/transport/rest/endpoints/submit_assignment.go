@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
+	"github.com/charmingruby/clize/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +19,12 @@ func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 		assignmentId := ctx.Param("assignment-id")
 
 		if err := svc.SubmitAssignment(appName, assignmentId); err != nil {
+			rnf, ok := err.(*errors.ResourceNotFoundError)
+			if ok {
+				ctx.JSON(http.StatusNotFound, rnf)
+				return
+			}
+
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}

@@ -17,13 +17,22 @@ type submitAssignmentOutput struct {
 func SubmitAssignment(appName, assignmentID string) error {
 	url := fmt.Sprintf("/submit/%s/%s", appName, assignmentID)
 
-	req, err := doRequest(http.MethodPut, url, nil, true)
+	res, err := doRequest(http.MethodPut, url, nil, true)
 	if err != nil {
 		terminal.PrintServerError()
 		return err
 	}
 
-	op, err := decodeSubmitAssignmentBody(req.Body)
+	statusCode := res.StatusCode
+	if statusCode != http.StatusOK {
+		if statusCode == http.StatusNotFound {
+			errRes := decodeNotFoundError(res.Body)
+			terminal.PrintErrorResponse(errRes)
+			return err
+		}
+	}
+
+	op, err := decodeSubmitAssignmentBody(res.Body)
 	if err != nil {
 		return err
 	}
