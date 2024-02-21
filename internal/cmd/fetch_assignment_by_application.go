@@ -28,7 +28,7 @@ func fetchAssignmentsByApplication() *cobra.Command {
 			}
 
 			if err := requests.FetchAssignmentsByApplication(name); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

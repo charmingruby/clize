@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
@@ -43,10 +44,19 @@ func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 		}
 
 		if err := svc.UpdateAssignment(assignmentId, applicationName, req.Title, req.Description); err != nil {
+			rnf, ok := err.(*errors.ResourceNotFoundError)
+			if ok {
+				ctx.JSON(http.StatusNotFound, rnf)
+				return
+			}
+
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
-
-		ctx.Status(http.StatusOK)
+		successMsg := fmt.Sprintf("%s modified successfully", assignmentId)
+		res := &modifyApplicationResponse{
+			Message: successMsg,
+		}
+		ctx.JSON(http.StatusOK, res)
 	}
 }

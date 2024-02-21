@@ -27,25 +27,33 @@ func ModifyAssignment(appName, assignmentID, title, description string) error {
 		Description: helpers.If[string](description != "", description, ""),
 	}
 
-	url := fmt.Sprintf("/submit/%s/%s", appName, assignmentID)
+	url := fmt.Sprintf("/assignments/%s/%s", appName, assignmentID)
 
 	var inputBody bytes.Buffer
 	if err := json.NewEncoder(&inputBody).Encode(inputs); err != nil {
 		return err
 	}
 
-	req, err := doRequest(http.MethodPut, url, &inputBody, true)
+	res, err := doRequest(http.MethodPut, url, &inputBody, true)
 	if err != nil {
 		terminal.PrintServerError()
 		return err
 	}
 
-	if req.StatusCode == http.StatusBadRequest {
-		terminal.PrintNotFoundResponse(appName)
+	statusCode := res.StatusCode
+	if statusCode != http.StatusOK {
+		if statusCode != http.StatusNotFound {
+			errRes := decodeNotFoundError(res.Body)
+			terminal.PrintErrorResponse(errRes.Message)
+			return err
+		}
+
+		badRequestMsg := fmt.Sprintf("Error modifiying %s in %s", assignmentID, appName)
+		terminal.PrintErrorResponse(badRequestMsg)
 		return err
 	}
 
-	op, err := decodeModifyAssignmentBody(req.Body)
+	op, err := decodeModifyAssignmentBody(res.Body)
 	if err != nil {
 		return err
 	}

@@ -16,7 +16,7 @@ func fetchAssignments() *cobra.Command {
 		Short: "Fetch all assignments",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := requests.FetchAssignments(); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

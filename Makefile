@@ -1,12 +1,20 @@
-
-.PHONY: start
-start:
+#####################
+# SERVER           #
+#####################
+.PHONY: server
+server:
 	go run cmd/api/main.go
 
+#####################
+# TESTS            #
+#####################
 .PHONY: test
 test:
 	go test ./...
 
+#####################
+# BUILD            #
+#####################
 .PHONY: build
 build: build-api build-cli
 
@@ -17,3 +25,10 @@ build-cli:
 .PHONY: build-api
 build-api:
 	go build -o api cmd/api/main.go
+
+#####################
+# COMMANDS         #
+#####################
+.PHONY: c
+c: 
+	go run cmd/cli/main.go $(cmd)

@@ -26,7 +26,7 @@ func register() *cobra.Command {
 			}
 
 			if err := requests.Register(username, email, password); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

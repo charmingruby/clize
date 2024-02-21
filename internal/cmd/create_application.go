@@ -26,7 +26,7 @@ func createApplication() *cobra.Command {
 			}
 
 			if err := requests.CreateApplication(name, context); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 

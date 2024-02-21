@@ -30,7 +30,7 @@ func doRequest(
 		}
 
 		if isTokenValid := jwt.NewJwtService().ValidateToken(token); !isTokenValid {
-			terminal.PrintErrorResponse(fmt.Errorf("cannot validate token"))
+			terminal.PrintErrorResponse("cannot validate token")
 			os.Exit(1)
 		}
 

@@ -26,7 +26,7 @@ func removeAssignment() *cobra.Command {
 			}
 
 			if err := requests.RemoveAssignment(appName, assignmentName); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

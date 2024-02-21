@@ -32,7 +32,7 @@ func modifyApplication() *cobra.Command {
 			}
 
 			if err := requests.ModifyApplication(appName, name, context); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

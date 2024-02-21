@@ -25,7 +25,7 @@ func getApplication() *cobra.Command {
 			}
 
 			if err := requests.GetApplication(name); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

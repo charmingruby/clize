@@ -25,7 +25,7 @@ func deleteApplication() *cobra.Command {
 			}
 
 			if err := requests.DeleteApplication(name); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

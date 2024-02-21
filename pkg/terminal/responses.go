@@ -7,13 +7,13 @@ func PrintServerError() {
 	color.Red("Server is closed")
 }
 
-func PrintErrorResponse(err error) {
+func PrintErrorResponse(msg string) {
 	ClearTerminal()
 	Header()
 	Gap()
 
 	Padding()
-	BoldRed.Printf("❌ %s\n", err.Error())
+	BoldRed.Printf("❌ %s\n", msg)
 
 	Gap()
 	Footer()

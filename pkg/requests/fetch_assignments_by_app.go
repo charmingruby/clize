@@ -31,7 +31,7 @@ func FetchAssignmentsByApplication(appName string) error {
 	if statusCode != http.StatusOK {
 		if statusCode == http.StatusNotFound {
 			errRes := decodeNotFoundError(res.Body)
-			terminal.PrintErrorResponse(errRes)
+			terminal.PrintErrorResponse(errRes.Message)
 			return err
 		}
 	}

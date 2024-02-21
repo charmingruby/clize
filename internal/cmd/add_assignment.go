@@ -32,7 +32,7 @@ func addAssignment() *cobra.Command {
 			}
 
 			if err := requests.AddAssignment(appName, title, description); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 

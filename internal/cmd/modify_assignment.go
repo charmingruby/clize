@@ -19,7 +19,7 @@ func modifyAssignment() *cobra.Command {
 
 	// as-mod
 	cmd := &cobra.Command{
-		Use:   terminal.CommandWrapper(ApplicationActor, terminal.ModifyCmd),
+		Use:   terminal.CommandWrapper(AssignmentActor, terminal.ModifyCmd),
 		Short: "Modifies an assignment",
 		Run: func(cmd *cobra.Command, args []string) {
 			if appName == "" && assignmentID == "" {
@@ -33,7 +33,7 @@ func modifyAssignment() *cobra.Command {
 			}
 
 			if err := requests.ModifyAssignment(appName, assignmentID, title, description); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},

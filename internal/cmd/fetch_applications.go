@@ -16,7 +16,7 @@ func fetchApplications() *cobra.Command {
 		Short: "Fetch all applications",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := requests.FetchApplications(); err != nil {
-				terminal.PrintErrorResponse(err)
+				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
 		},
