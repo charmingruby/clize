@@ -70,6 +70,8 @@ func decodeRegisterBody(body io.ReadCloser) (*registerOutput, error) {
 }
 
 func runRegisterView(op *registerOutput) {
+	terminal.ClearTerminal()
+
 	terminal.Header()
 	terminal.Gap()
 

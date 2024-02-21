@@ -54,6 +54,8 @@ func decodeFetchAssignments(body io.ReadCloser) (*fetchAssignmentsOutput, error)
 }
 
 func runFetchAssignmentsView(assignments []application.Assignment) {
+	terminal.ClearTerminal()
+
 	var amountOfAssignmentsDone int
 	totalAssignments := len(assignments)
 
