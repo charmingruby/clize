@@ -72,6 +72,9 @@ func createTokenCache(body io.ReadCloser) error {
 		return err
 	}
 
+	msg := "Authenticated successfully"
+	terminal.PrintSuccessMsgResponse(msg)
+
 	return nil
 }
 
