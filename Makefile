@@ -18,6 +18,10 @@ test:
 .PHONY: build
 build: build-api build-cli
 
+.PHONY: build-container
+build-container:
+	docker build -t clize-server .
+
 .PHONY: build-cli
 build-cli: 
 	go build -o cli cmd/cli/main.go

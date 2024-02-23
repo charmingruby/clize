@@ -8,7 +8,6 @@ func PrintServerError() {
 }
 
 func PrintErrorResponse(msg string) {
-	ClearTerminal()
 	Header()
 	Gap()
 
@@ -31,7 +30,6 @@ func PrintNotFoundResponse(identifier string) {
 }
 
 func PrintSuccessMsgResponse(msg string) {
-	ClearTerminal()
 	Header()
 	Gap()
 

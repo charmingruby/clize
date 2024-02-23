@@ -63,7 +63,6 @@ func decodeGetApplicationBody(body io.ReadCloser) (*getApplicationOutput, error)
 }
 
 func runGetApplicationView(app *application.Application) {
-	terminal.ClearTerminal()
 
 	terminal.Header()
 	terminal.Gap()

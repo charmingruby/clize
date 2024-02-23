@@ -47,7 +47,6 @@ func FetchAssignmentsByApplication(appName string) error {
 }
 
 func runFetchAssignmentsByAppView(appName string, assignments []application.Assignment) {
-	terminal.ClearTerminal()
 
 	var amountOfAssignmentsDone int
 	totalAssignments := len(assignments)

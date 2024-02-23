@@ -23,6 +23,10 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	signUpHandler := endpoints.NewSignUpHandler(svc.ProfileService)
 	signInHandler := endpoints.NewSignInHandler(svc.ProfileService)
 
+	healthCheckHandler := endpoints.NewHealthCheckHandler()
+
+	r.GET("/health-check", healthCheckHandler)
+
 	r.POST("/sign-in", signInHandler)
 	r.POST("/sign-up", signUpHandler)
 
