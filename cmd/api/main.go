@@ -24,7 +24,9 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	fmt.Printf("%+v\n", cfg)
+	fmt.Println(cfg.Redis.Password)
+	fmt.Println(cfg.Redis.RestToken)
+	fmt.Println(cfg.Redis.RestUrl)
 
 	// Redis Connection
 	rc, err := rdb.Connect(cfg)
@@ -33,12 +35,12 @@ func main() {
 	}
 
 	// Services
-	log.Println("Insatianting services...")
+	log.Println("Creating services...")
 	appService, err := internal.NewService(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Services instatiateds.")
+	log.Println("Services created.")
 
 	// Server
 	gin.SetMode(gin.ReleaseMode)
@@ -52,10 +54,12 @@ func main() {
 	)
 
 	// Handlers
+	log.Println("Creating HTTP service...")
 	r, err = internal.NewHTTPService(r, appService)
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("HTTP Service created.")
 
 	fmt.Printf("Server is running on %s", cfg.Server.Port)
 	err = r.Run(":" + cfg.Server.Port)

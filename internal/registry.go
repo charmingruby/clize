@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"log"
 
 	"github.com/charmingruby/clize/internal/database/redis"
 	"github.com/charmingruby/clize/internal/domain"
@@ -35,6 +36,9 @@ func NewService(rc *rdb.Client) (*domain.Service, error) {
 }
 
 func NewHTTPService(r *gin.Engine, svc *domain.Service) (*gin.Engine, error) {
+	log.Println("Registering routes...")
 	r = rest.NewHTTPHandler(r, svc)
+	log.Println("Routes registered.")
+
 	return r, nil
 }
