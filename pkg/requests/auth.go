@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	"github.com/charmingruby/clize/pkg/terminal"
@@ -20,7 +21,7 @@ type authResponse struct {
 	Token string `json:"token"`
 }
 
-func Auth(username, password, path string) error {
+func Auth(username, password string) error {
 	creds := credentials{username, password}
 
 	var credsBody bytes.Buffer
@@ -28,11 +29,13 @@ func Auth(username, password, path string) error {
 		return err
 	}
 
-	res, err := doRequest("POST", path, &credsBody, false)
+	res, err := doRequest(http.MethodPost, "/sign-in", &credsBody, false)
 	if err != nil {
 		terminal.PrintServerError()
 		return err
 	}
+
+	println(res.StatusCode)
 
 	return createTokenCache(res.Body)
 }
@@ -55,7 +58,6 @@ func createTokenCache(body io.ReadCloser) error {
 
 	file, err := os.Create(".cacheToken")
 	if err != nil {
-
 		return err
 	}
 

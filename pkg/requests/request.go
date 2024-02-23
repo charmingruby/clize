@@ -27,7 +27,7 @@ func doRequest(
 		os.Exit(1)
 	}
 
-	url := fmt.Sprintf("%s/%s", serverUrl, path)
+	url := fmt.Sprintf("%s%s", serverUrl, path)
 
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
@@ -36,6 +36,7 @@ func doRequest(
 
 	if auth {
 		token, err := readCacheToken()
+
 		if err != nil {
 			log.Println("Cannot read cache token.")
 			return nil, err
