@@ -1,6 +1,8 @@
 package config
 
 import (
+	"log"
+
 	env "github.com/caarlos0/env/v6"
 )
 
@@ -27,6 +29,7 @@ type serverConfig struct {
 }
 
 func LoadConfig() (*Config, error) {
+	log.Println("Loading environment configuration...")
 
 	environment := envConfig{}
 	err := env.Parse(&environment)
@@ -46,6 +49,8 @@ func LoadConfig() (*Config, error) {
 			Host: "http://localhost:",
 		},
 	}
+
+	log.Println("Environment configuration loaded.")
 
 	return cfg, nil
 }
