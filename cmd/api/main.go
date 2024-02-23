@@ -24,10 +24,6 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	fmt.Println(cfg.Redis.Password)
-	fmt.Println(cfg.Redis.RestToken)
-	fmt.Println(cfg.Redis.RestUrl)
-
 	// Redis Connection
 	rc, err := rdb.Connect(cfg)
 	if err != nil {
@@ -49,7 +45,7 @@ func main() {
 	r.Use(
 		cors.New(cors.Config{
 			AllowAllOrigins: true,
-			AllowHeaders:    []string{"Origin", "Accept", "Content-Type"},
+			AllowHeaders:    []string{"Origin", "Accept", "Content-Type", "Authorization"},
 		}),
 	)
 
