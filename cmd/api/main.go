@@ -16,7 +16,7 @@ import (
 func main() {
 	// Load environment variables
 	if err := godotenv.Load(); err != nil {
-		log.Println(".env not found.")
+		fmt.Println(".env not found.")
 	}
 
 	cfg, err := config.LoadConfig()
@@ -31,12 +31,12 @@ func main() {
 	}
 
 	// Services
-	log.Println("Creating services...")
+	fmt.Println("Creating services...")
 	appService, err := internal.NewService(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Services created.")
+	fmt.Println("Services created.")
 
 	// Server
 	gin.SetMode(gin.ReleaseMode)
@@ -45,20 +45,21 @@ func main() {
 	r.Use(
 		cors.New(cors.Config{
 			AllowAllOrigins: true,
-			AllowHeaders:    []string{"Origin", "Accept", "Content-Type", "Authorization"},
+			AllowHeaders:    []string{"Origin", "Accept", "Content-Type", "Authorization", "User-Agent"},
 		}),
 	)
 
 	// Handlers
-	log.Println("Creating HTTP service...")
+	fmt.Println("Creating HTTP service...")
 	r, err = internal.NewHTTPService(r, appService)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("HTTP Service created.")
+	fmt.Println("HTTP Service created.")
 
 	fmt.Printf("Server is running on %s", cfg.Server.Port)
-	err = r.Run(":" + cfg.Server.Port)
+	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
+	err = r.Run(addr)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

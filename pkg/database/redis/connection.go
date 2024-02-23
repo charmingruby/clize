@@ -3,14 +3,13 @@ package redis
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/charmingruby/clize/config"
 	rdb "github.com/go-redis/redis/v8"
 )
 
 func Connect(cfg *config.Config) (*rdb.Client, error) {
-	log.Println("Connection to Redis Upstash...")
+	fmt.Println("Connection to Redis Upstash...")
 
 	ctx := context.Background()
 
@@ -27,7 +26,7 @@ func Connect(cfg *config.Config) (*rdb.Client, error) {
 		return nil, err
 	}
 
-	log.Println("Connected to Redis Upstash.")
+	fmt.Println("Connected to Redis Upstash.")
 
 	return redisClient, nil
 }

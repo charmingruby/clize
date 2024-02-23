@@ -23,7 +23,7 @@ func doRequest(
 	serverUrl, ok := os.LookupEnv("SERVER_URL")
 
 	if !ok {
-		terminal.PrintErrorResponse("server url not found on .env")
+		terminal.PrintErrorResponse("SERVER_URL not found on .env")
 		os.Exit(1)
 	}
 
