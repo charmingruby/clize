@@ -57,8 +57,8 @@ func main() {
 	}
 	fmt.Println("HTTP Service created.")
 
-	fmt.Printf("Server is running on %s", cfg.Server.Port)
-	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
+	fmt.Printf("Server is running on %s port.", cfg.Server.Port)
+	addr := fmt.Sprintf(":%s", cfg.Server.Port)
 	err = r.Run(addr)
 	if err != nil {
 		log.Fatal(err.Error())

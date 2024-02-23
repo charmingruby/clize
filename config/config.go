@@ -10,6 +10,7 @@ type envConfig struct {
 	RedisRestUrl   string `env:"UPSTASH_REDIS_REST_URL,required"`
 	RedisRestToken string `env:"UPSTASH_REDIS_REST_TOKEN,required"`
 	RedisPassword  string `env:"UPSTASH_REDIS_PASSWORD,required"`
+	Port           string `env:"PORT,required"`
 }
 
 type Config struct {
@@ -45,8 +46,7 @@ func LoadConfig() (*Config, error) {
 		},
 
 		Server: &serverConfig{
-			Port: "3000",
-			Host: "0.0.0.0",
+			Port: environment.Port,
 		},
 	}
 
