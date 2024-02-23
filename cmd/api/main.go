@@ -16,13 +16,15 @@ import (
 func main() {
 	// Load environment variables
 	if err := godotenv.Load(); err != nil {
-		log.Println("error loading .env file:", err)
+		log.Println(".env not found.")
 	}
 
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	fmt.Printf("%+v\n", cfg)
 
 	// Redis Connection
 	rc, err := rdb.Connect(cfg)
