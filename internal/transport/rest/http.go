@@ -37,8 +37,8 @@ func NewHTTPHandler(r *gin.Engine, svc *domain.Service) *gin.Engine {
 	r.DELETE("/applications/:name", AuthMiddleware(), deleteApplicationHandler)
 
 	r.POST("/applications/:application-name/assignments", AuthMiddleware(), addAssignmentHandler)
-	r.PUT("/submit/:application-name/:assignment-id", AuthMiddleware(), submitAssignmentHandler)
-	r.PUT("/assignments/:application-name/:assignment-id", AuthMiddleware(), modifyAssignmentHandler)
+	r.PUT("/submit/:application-name/:assignment-title", AuthMiddleware(), submitAssignmentHandler)
+	r.PUT("/assignments/:application-name/:assignment-title", AuthMiddleware(), modifyAssignmentHandler)
 	r.GET("/applications/assignments/:application-name", AuthMiddleware(), fetchAssignmentsByAppHandler)
 	r.GET("/assignments", AuthMiddleware(), fetchAssignmentsHandler)
 	r.DELETE("/assignments/:application-name/:assignment-title", AuthMiddleware(), removeAssignmentHandler)

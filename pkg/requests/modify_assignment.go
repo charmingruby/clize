@@ -21,13 +21,13 @@ type modifyAssignmentOutput struct {
 	Message string `json:"message"`
 }
 
-func ModifyAssignment(appName, assignmentID, title, description string) error {
+func ModifyAssignment(appName, assignmentTitle, title, description string) error {
 	inputs := modifyAssignmentInput{
 		Title:       helpers.If[string](title != "", title, ""),
 		Description: helpers.If[string](description != "", description, ""),
 	}
 
-	url := fmt.Sprintf("/assignments/%s/%s", appName, assignmentID)
+	url := fmt.Sprintf("/assignments/%s/%s", appName, assignmentTitle)
 
 	var inputBody bytes.Buffer
 	if err := json.NewEncoder(&inputBody).Encode(inputs); err != nil {
@@ -48,7 +48,7 @@ func ModifyAssignment(appName, assignmentID, title, description string) error {
 			return err
 		}
 
-		badRequestMsg := fmt.Sprintf("Error modifiying %s in %s", assignmentID, appName)
+		badRequestMsg := fmt.Sprintf("Error modifiying %s in %s", assignmentTitle, appName)
 		terminal.PrintErrorResponse(badRequestMsg)
 		return err
 	}

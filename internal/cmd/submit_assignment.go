@@ -11,8 +11,8 @@ import (
 
 func submitAssignment() *cobra.Command {
 	var (
-		appName      string
-		assignmentID string
+		appName         string
+		assignmentTitle string
 	)
 
 	// as-sub
@@ -20,12 +20,12 @@ func submitAssignment() *cobra.Command {
 		Use:   terminal.CommandWrapper(AssignmentActor, terminal.SubmitCmd),
 		Short: "Submits an assignment from an application",
 		Run: func(cmd *cobra.Command, args []string) {
-			if appName == "" && assignmentID == "" {
-				color.Red("app name and assignment id are required")
+			if appName == "" && assignmentTitle == "" {
+				color.Red("app name and assignment title are required")
 				os.Exit(1)
 			}
 
-			if err := requests.SubmitAssignment(appName, assignmentID); err != nil {
+			if err := requests.SubmitAssignment(appName, assignmentTitle); err != nil {
 				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
@@ -33,7 +33,7 @@ func submitAssignment() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&appName, "app name", "n", "", "app name")
-	cmd.Flags().StringVarP(&assignmentID, "assignment id", "i", "", "assignment id")
+	cmd.Flags().StringVarP(&assignmentTitle, "assignment title", "t", "", "assignment title")
 
 	return cmd
 }

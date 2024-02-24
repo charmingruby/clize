@@ -16,9 +16,9 @@ type submitAssignmentResponse struct {
 func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		appName := ctx.Param("application-name")
-		assignmentId := ctx.Param("assignment-id")
+		assignmentTitle := ctx.Param("assignment-title")
 
-		if err := svc.SubmitAssignment(appName, assignmentId); err != nil {
+		if err := svc.SubmitAssignment(appName, assignmentTitle); err != nil {
 			rnf, ok := err.(*errors.ResourceNotFoundError)
 			if ok {
 				ctx.JSON(http.StatusNotFound, rnf)
@@ -30,7 +30,7 @@ func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 		}
 
 		res := &submitAssignmentResponse{
-			Message: fmt.Sprintf("%s: %s submitted successfully", appName, assignmentId),
+			Message: fmt.Sprintf("%s: %s submitted successfully", appName, assignmentTitle),
 		}
 
 		ctx.JSON(http.StatusOK, res)

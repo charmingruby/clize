@@ -89,7 +89,7 @@ func (as *AssignmentService) RemoveAssignmentFromApplication(appName, assignment
 	return nil
 }
 
-func (as *AssignmentService) UpdateAssignment(id, applicationName, title, description string) error {
+func (as *AssignmentService) UpdateAssignment(assignmentTitle, applicationName, title, description string) error {
 	app, err := as.repo.FindByName(applicationName)
 	if err != nil {
 		return &errors.ResourceNotFoundError{
@@ -101,7 +101,7 @@ func (as *AssignmentService) UpdateAssignment(id, applicationName, title, descri
 	var assignmentToModify *Assignment
 	var assignments []Assignment
 	for _, a := range app.Assignments {
-		if a.ID == id {
+		if a.Title == assignmentTitle {
 			assignmentToModify = &a
 			continue
 		}
@@ -128,7 +128,7 @@ func (as *AssignmentService) UpdateAssignment(id, applicationName, title, descri
 	return nil
 }
 
-func (as *AssignmentService) SubmitAssignment(applicationName, assignmentId string) error {
+func (as *AssignmentService) SubmitAssignment(applicationName, assignmentTitle string) error {
 	app, err := as.repo.FindByName(applicationName)
 	if err != nil {
 		return &errors.ResourceNotFoundError{
@@ -140,7 +140,7 @@ func (as *AssignmentService) SubmitAssignment(applicationName, assignmentId stri
 	var assignmentToSubmit *Assignment
 	var assignments []Assignment
 	for _, a := range app.Assignments {
-		if a.ID == assignmentId {
+		if a.Title == assignmentTitle {
 			assignmentToSubmit = &a
 			continue
 		}

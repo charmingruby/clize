@@ -11,8 +11,8 @@ import (
 
 func removeAssignment() *cobra.Command {
 	var (
-		appName        string
-		assignmentName string
+		appName         string
+		assignmentTitle string
 	)
 
 	// as-rm
@@ -20,12 +20,12 @@ func removeAssignment() *cobra.Command {
 		Use:   terminal.CommandWrapper(AssignmentActor, terminal.RemoveCmd),
 		Short: "Removes an assignment from an application",
 		Run: func(cmd *cobra.Command, args []string) {
-			if appName == "" && assignmentName == "" {
-				color.Red("app and assignment names are required")
+			if appName == "" && assignmentTitle == "" {
+				color.Red("app name and assignment title are required")
 				os.Exit(1)
 			}
 
-			if err := requests.RemoveAssignment(appName, assignmentName); err != nil {
+			if err := requests.RemoveAssignment(appName, assignmentTitle); err != nil {
 				terminal.PrintErrorResponse(err.Error())
 				os.Exit(1)
 			}
@@ -33,7 +33,7 @@ func removeAssignment() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&appName, "app name", "n", "", "app name")
-	cmd.Flags().StringVarP(&assignmentName, "assignment name", "a", "", "assignment name")
+	cmd.Flags().StringVarP(&assignmentTitle, "assignment title", "t", "", "assignment title")
 
 	return cmd
 }

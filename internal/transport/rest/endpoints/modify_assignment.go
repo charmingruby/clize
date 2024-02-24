@@ -20,8 +20,8 @@ var modifyAssignmentFieldsOptions = []string{
 
 func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		assignmentId := ctx.Param("assignment-id")
 		applicationName := ctx.Param("application-name")
+		assignmentTitle := ctx.Param("assignment-title")
 
 		var req modifyAssignmentRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -43,7 +43,7 @@ func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			return
 		}
 
-		if err := svc.UpdateAssignment(assignmentId, applicationName, req.Title, req.Description); err != nil {
+		if err := svc.UpdateAssignment(assignmentTitle, applicationName, req.Title, req.Description); err != nil {
 			rnf, ok := err.(*errors.ResourceNotFoundError)
 			if ok {
 				ctx.JSON(http.StatusNotFound, rnf)
@@ -53,7 +53,7 @@ func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			ctx.JSON(http.StatusBadRequest, err)
 			return
 		}
-		successMsg := fmt.Sprintf("%s modified successfully", assignmentId)
+		successMsg := fmt.Sprintf("%s modified successfully", assignmentTitle)
 		res := &modifyApplicationResponse{
 			Message: successMsg,
 		}
