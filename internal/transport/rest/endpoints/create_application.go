@@ -1,11 +1,10 @@
 package endpoints
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,34 +15,41 @@ type createApplicationRequest struct {
 
 var createApplicationRequiredFields = []string{"name", "context"}
 
-type createApplicationResponse struct {
-	Message string `json:"message"`
-}
-
 func NewCreateApplicationHandler(svc *application.ApplicationService) gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
 		var req createApplicationRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			err = &errors.InvalidPayloadError{
-				Message:        errors.NewInvalidPayloadErrorMessage(createApplicationRequiredFields),
-				RequiredFields: createApplicationRequiredFields,
-			}
+			errMsg := validation.NewInvalidPayloadErrorMessage(createApplicationRequiredFields)
+			res := WrapResponse[validation.InvalidPayloadError](
+				&validation.InvalidPayloadError{
+					RequiredFields: createApplicationRequiredFields,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
 
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		app, err := svc.CreateApplication(req.Name, req.Context)
+		_, err := svc.CreateApplication(req.Name, req.Context)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
+			res := WrapResponse[error](
+				&err,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		successMsg := fmt.Sprintf("%s created successfully", app.Name)
-		res := &createApplicationResponse{
-			Message: successMsg,
-		}
+		res := WrapResponse[string](
+			nil,
+			http.StatusCreated,
+			NewCreatedResponse(req.Name),
+		)
 
 		ctx.JSON(http.StatusCreated, res)
 	}

@@ -1,17 +1,13 @@
 package endpoints
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
+
 	"github.com/gin-gonic/gin"
 )
-
-type removeAssignmentResponse struct {
-	Message string `json:"message"`
-}
 
 func NewRemoveAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -22,21 +18,34 @@ func NewRemoveAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			appName,
 			assignmentName,
 		); err != nil {
-
-			rnf, ok := err.(*errors.ResourceNotFoundError)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
 			if ok {
-				ctx.JSON(http.StatusNotFound, rnf)
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
+
+				ctx.JSON(http.StatusNotFound, res)
 				return
 			}
 
-			ctx.JSON(http.StatusBadRequest, err.Error())
+			res := WrapResponse[error](
+				&err,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		successMsg := fmt.Sprintf("%s deleted successfully from %s", assignmentName, appName)
-		res := &removeAssignmentResponse{
-			Message: successMsg,
-		}
+		res := WrapResponse[string](
+			nil,
+			http.StatusOK,
+			NewRemovedItemResponse(assignmentName, appName),
+		)
+
 		ctx.JSON(http.StatusOK, res)
 	}
 }

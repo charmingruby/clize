@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/charmingruby/clize/helpers"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/charmingruby/clize/pkg/uuid"
 )
 
@@ -49,11 +49,11 @@ func (a *Application) UpdateStatus(status string) error {
 
 func (a *Application) Validate() error {
 	if a.Name == "" {
-		return &errors.RequiredFieldError{FieldName: "name"}
+		return &validation.RequiredFieldError{FieldName: "name"}
 	}
 
 	if len(a.Name) < 4 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: true,
 			Quantity:       4,
 			FieldName:      "name",
@@ -61,7 +61,7 @@ func (a *Application) Validate() error {
 	}
 
 	if len(a.Name) > 24 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: false,
 			Quantity:       24,
 			FieldName:      "name",
@@ -69,11 +69,11 @@ func (a *Application) Validate() error {
 	}
 
 	if a.Context == "" {
-		return &errors.RequiredFieldError{FieldName: "context"}
+		return &validation.RequiredFieldError{FieldName: "context"}
 	}
 
 	if len(a.Context) < 6 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: true,
 			Quantity:       6,
 			FieldName:      "context",
@@ -81,7 +81,7 @@ func (a *Application) Validate() error {
 	}
 
 	if len(a.Context) > 40 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: false,
 			Quantity:       40,
 			FieldName:      "context",

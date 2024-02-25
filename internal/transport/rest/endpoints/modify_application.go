@@ -1,22 +1,16 @@
 package endpoints
 
 import (
-	"fmt"
 	"net/http"
-	"reflect"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
 type modifyApplicationRequest struct {
 	Name    string `json:"name"`
 	Context string `json:"context"`
-}
-
-type modifyApplicationResponse struct {
-	Message string `json:"message"`
 }
 
 var modifyAppFieldsOptions = []string{
@@ -29,41 +23,61 @@ func NewModifyApplicationHandler(svc *application.ApplicationService) gin.Handle
 
 		var req modifyApplicationRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
+			errMsg := validation.NewInvalidPayloadErrorMessage(modifyAppFieldsOptions)
+			res := WrapResponse[validation.InvalidPayloadError](
+				&validation.InvalidPayloadError{
+					RequiredFields: modifyAppFieldsOptions,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
 		if req.Name == "" && req.Context == "" {
-			err := errors.NotNullableBodyError{
-				Message: errors.NewNotNullableErrorMessage(modifyAppFieldsOptions),
-				Fields:  modifyAppFieldsOptions,
-			}
+			errMsg := validation.NewNotNullableErrorMessage(modifyAppFieldsOptions)
+			res := WrapResponse[validation.NotNullableBodyError](
+				&validation.NotNullableBodyError{
+					Fields: modifyAppFieldsOptions,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
 
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
 		if err := svc.ModifyApplication(name, req.Name, req.Context); err != nil {
-			errType := reflect.TypeOf(err)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
+			if ok {
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
 
-			if errType.Name() == "ResourceNotFoundError" {
-				err := errors.ResourceNotFoundError{
-					Entity:  "application",
-					Message: errors.NewResourceNotFoundErrorMessage("application"),
-				}
-
-				ctx.JSON(http.StatusNotFound, err)
+				ctx.JSON(http.StatusNotFound, res)
 				return
 			}
 
-			ctx.JSON(http.StatusBadRequest, err)
+			res := WrapResponse[error](
+				&err,
+				http.StatusNotFound,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		successMsg := fmt.Sprintf("%s modified successfully", name)
-		res := &modifyApplicationResponse{
-			Message: successMsg,
-		}
+		res := WrapResponse[string](
+			nil,
+			http.StatusOK,
+			NewModifiedResponse(name),
+		)
 
 		ctx.JSON(http.StatusOK, res)
 	}

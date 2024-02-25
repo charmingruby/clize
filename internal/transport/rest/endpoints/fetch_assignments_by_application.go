@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,13 +14,25 @@ func NewFetchAssignmentsByApplication(svc *application.AssignmentService) gin.Ha
 
 		assignments, err := svc.FetchAssignmentByApplication(appName)
 		if err != nil {
-			rnf, ok := err.(*errors.ResourceNotFoundError)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
 			if ok {
-				ctx.JSON(http.StatusNotFound, rnf)
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
+
+				ctx.JSON(http.StatusNotFound, res)
 				return
 			}
 
-			ctx.JSON(http.StatusBadRequest, err)
+			res := WrapResponse[string](
+				nil,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 

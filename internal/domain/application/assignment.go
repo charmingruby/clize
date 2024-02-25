@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/charmingruby/clize/helpers"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/charmingruby/clize/pkg/uuid"
 )
 
@@ -45,13 +45,13 @@ type Assignment struct {
 
 func (a *Assignment) Validate() error {
 	if a.Title == "" {
-		return &errors.RequiredFieldError{
+		return &validation.RequiredFieldError{
 			FieldName: "title",
 		}
 	}
 
 	if len(a.Title) < 4 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: true,
 			Quantity:       4,
 			FieldName:      "title",
@@ -59,7 +59,7 @@ func (a *Assignment) Validate() error {
 	}
 
 	if len(a.Title) > 20 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: false,
 			Quantity:       20,
 			FieldName:      "title",
@@ -67,13 +67,13 @@ func (a *Assignment) Validate() error {
 	}
 
 	if a.Description == "" {
-		return &errors.RequiredFieldError{
+		return &validation.RequiredFieldError{
 			FieldName: "description",
 		}
 	}
 	if len(a.Description) < 8 {
 
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: true,
 			Quantity:       8,
 			FieldName:      "description",
@@ -81,7 +81,7 @@ func (a *Assignment) Validate() error {
 	}
 
 	if len(a.Description) > 100 {
-		return &errors.FieldLengthError{
+		return &validation.FieldLengthError{
 			IsMinimumError: false,
 			Quantity:       100,
 			FieldName:      "description",

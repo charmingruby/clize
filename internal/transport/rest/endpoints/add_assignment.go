@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,12 +21,16 @@ func NewAddAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc
 
 		var req addAssignmentRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			err = &errors.InvalidPayloadError{
-				Message:        errors.NewInvalidPayloadErrorMessage(addAssignmentRequiredFields),
-				RequiredFields: addAssignmentRequiredFields,
-			}
+			errMsg := validation.NewInvalidPayloadErrorMessage(addAssignmentRequiredFields)
+			res := WrapResponse[validation.InvalidPayloadError](
+				&validation.InvalidPayloadError{
+					RequiredFields: addAssignmentRequiredFields,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
 
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
@@ -34,16 +38,34 @@ func NewAddAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc
 		createdBy := "static profile"
 
 		if err := svc.AddAssignment(applicationName, req.Title, req.Description, createdBy); err != nil {
-			rnf, ok := err.(*errors.ResourceNotFoundError)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
 			if ok {
-				ctx.JSON(http.StatusNotFound, rnf)
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
+
+				ctx.JSON(http.StatusNotFound, res)
 				return
 			}
 
-			ctx.JSON(http.StatusBadRequest, err)
+			res := WrapResponse[string](
+				nil,
+				http.StatusBadRequest,
+				rnf.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, NewCreatedResponse(req.Title))
+		res := WrapResponse[string](
+			nil,
+			http.StatusCreated,
+			NewAddItemResponse(req.Title, applicationName),
+		)
+
+		ctx.JSON(http.StatusCreated, res)
 	}
 }

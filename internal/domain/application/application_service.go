@@ -1,8 +1,6 @@
 package application
 
-import (
-	"github.com/charmingruby/clize/pkg/errors"
-)
+import "github.com/charmingruby/clize/internal/validation"
 
 type ApplicationService struct {
 	repo ApplicationRepository
@@ -16,10 +14,10 @@ func NewApplicationService(repo ApplicationRepository) *ApplicationService {
 
 func (as *ApplicationService) CreateApplication(name, context string) (*Application, error) {
 	if _, err := as.repo.FindByName(name); err == nil {
-		return nil, &errors.UniqueValueViolationError{
+		return nil, &validation.UniqueValueViolationError{
 			Field:   "name",
 			Entity:  "application",
-			Message: errors.NewUniqueValueViolationErrorMessage("application", "name"),
+			Message: validation.NewUniqueValueViolationErrorMessage("application", "name"),
 		}
 	}
 

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,10 +14,34 @@ func NewGetApplicationHandler(svc *application.ApplicationService) gin.HandlerFu
 
 		app, err := svc.GetApplication(name)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, err)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
+			if ok {
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
+
+				ctx.JSON(http.StatusNotFound, res)
+				return
+			}
+
+			res := WrapResponse[string](
+				nil,
+				http.StatusBadRequest,
+				rnf.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		ctx.JSON(http.StatusOK, app)
+		res := WrapResponse[application.Application](
+			app,
+			http.StatusOK,
+			NewFetchedResponse("application", 1),
+		)
+
+		ctx.JSON(http.StatusOK, res)
 	}
 }

@@ -15,9 +15,13 @@ test:
 #####################
 # BUILD            #
 #####################
-.PHONY: build
-build:
+.PHONY: build-server
+build-server:
 	go build -o api cmd/api/main.go
+
+.PHONY: build-cli
+build-cli:
+	go build -o cli cmd/api/main.go
 
 #####################
 # COMMANDS         #

@@ -1,8 +1,8 @@
 package profile
 
 import (
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/charmingruby/clize/pkg/cryptography"
-	"github.com/charmingruby/clize/pkg/errors"
 )
 
 type ProfileService struct {
@@ -28,10 +28,10 @@ func (ps *ProfileService) Register(
 	}
 
 	if _, err := ps.profileRepo.FindByUsername(username); err == nil {
-		return &errors.UniqueValueViolationError{
+		return &validation.UniqueValueViolationError{
 			Entity:  "profile",
 			Field:   "username",
-			Message: errors.NewUniqueValueViolationErrorMessage("profile", "username"),
+			Message: validation.NewUniqueValueViolationErrorMessage("profile", "username"),
 		}
 	}
 
@@ -51,7 +51,7 @@ func (ps *ProfileService) Login(
 		password,
 	)
 	if err != nil {
-		return &errors.GenericValidationError{
+		return &validation.GenericValidationError{
 			Message: "credentials do not match",
 		}
 	}

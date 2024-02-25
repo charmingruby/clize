@@ -5,13 +5,10 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
+
 	"github.com/gin-gonic/gin"
 )
-
-type submitAssignmentResponse struct {
-	Message string `json:"message"`
-}
 
 func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -19,19 +16,35 @@ func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 		assignmentTitle := ctx.Param("assignment-title")
 
 		if err := svc.SubmitAssignment(appName, assignmentTitle); err != nil {
-			rnf, ok := err.(*errors.ResourceNotFoundError)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
 			if ok {
-				ctx.JSON(http.StatusNotFound, rnf)
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
+
+				ctx.JSON(http.StatusNotFound, res)
 				return
 			}
 
-			ctx.JSON(http.StatusBadRequest, err)
+			res := WrapResponse[error](
+				&err,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		res := &submitAssignmentResponse{
-			Message: fmt.Sprintf("%s: %s submitted successfully", appName, assignmentTitle),
-		}
+		msg := fmt.Sprintf("%s: %s submitted successfully", appName, assignmentTitle)
+
+		res := WrapResponse[string](
+			nil,
+			http.StatusOK,
+			msg,
+		)
 
 		ctx.JSON(http.StatusOK, res)
 	}

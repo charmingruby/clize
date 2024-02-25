@@ -1,11 +1,10 @@
 package endpoints
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,38 +24,62 @@ func NewModifyAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 
 		var req modifyAssignmentRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			err = &errors.InvalidPayloadError{
-				RequiredFields: modifyAppFieldsOptions,
-				Message:        errors.NewInvalidPayloadErrorMessage(modifyAssignmentFieldsOptions),
-			}
+			errMsg := validation.NewInvalidPayloadErrorMessage(modifyAppFieldsOptions)
+			res := WrapResponse[validation.InvalidPayloadError](
+				&validation.InvalidPayloadError{
+					RequiredFields: modifyAppFieldsOptions,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
 
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
 		if req.Title == "" && req.Description == "" {
-			err := &errors.NotNullableBodyError{
-				Message: errors.NewNotNullableErrorMessage(modifyAssignmentFieldsOptions),
-				Fields:  modifyAssignmentFieldsOptions,
-			}
-			ctx.JSON(http.StatusBadRequest, err)
+			errMsg := validation.NewNotNullableErrorMessage(modifyAssignmentFieldsOptions)
+			res := WrapResponse[validation.NotNullableBodyError](
+				&validation.NotNullableBodyError{
+					Fields: modifyAssignmentFieldsOptions,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
 		if err := svc.UpdateAssignment(assignmentTitle, applicationName, req.Title, req.Description); err != nil {
-			rnf, ok := err.(*errors.ResourceNotFoundError)
+			rnf, ok := err.(*validation.ResourceNotFoundError)
 			if ok {
-				ctx.JSON(http.StatusNotFound, rnf)
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					rnf.Error(),
+				)
+
+				ctx.JSON(http.StatusNotFound, res)
 				return
 			}
 
-			ctx.JSON(http.StatusBadRequest, err)
+			res := WrapResponse[error](
+				&err,
+				http.StatusNotFound,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
-		successMsg := fmt.Sprintf("%s modified successfully", assignmentTitle)
-		res := &modifyApplicationResponse{
-			Message: successMsg,
-		}
+
+		res := WrapResponse[string](
+			nil,
+			http.StatusOK,
+			NewModifiedResponse(assignmentTitle),
+		)
+
 		ctx.JSON(http.StatusOK, res)
 	}
 }

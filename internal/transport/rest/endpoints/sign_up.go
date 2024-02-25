@@ -1,11 +1,10 @@
 package endpoints
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/profile"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,11 +20,16 @@ func NewSignUpHandler(svc *profile.ProfileService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req signUpRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			err = &errors.InvalidPayloadError{
-				Message:        errors.NewInvalidPayloadErrorMessage(signUpRequiredFields),
-				RequiredFields: signUpRequiredFields,
-			}
-			ctx.JSON(http.StatusBadRequest, err)
+			errMsg := validation.NewInvalidPayloadErrorMessage(signUpRequiredFields)
+			res := WrapResponse[validation.InvalidPayloadError](
+				&validation.InvalidPayloadError{
+					RequiredFields: signUpRequiredFields,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
@@ -34,13 +38,34 @@ func NewSignUpHandler(svc *profile.ProfileService) gin.HandlerFunc {
 			req.Email,
 			req.Password,
 		); err != nil {
-			ctx.JSON(http.StatusBadRequest, err)
+			uvv, ok := err.(*validation.UniqueValueViolationError)
+			if ok {
+				res := WrapResponse[validation.UniqueValueViolationError](
+					uvv,
+					http.StatusBadRequest,
+					uvv.Error(),
+				)
+
+				ctx.JSON(http.StatusBadRequest, res)
+				return
+			}
+
+			res := WrapResponse[error](
+				&err,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		ctx.JSON(
+		res := WrapResponse[string](
+			nil,
 			http.StatusCreated,
-			NewCreatedResponse(fmt.Sprintf("%s's %s", req.Username, "profile")),
+			NewCreatedResponse(req.Username),
 		)
+
+		ctx.JSON(http.StatusCreated, res)
 	}
 }

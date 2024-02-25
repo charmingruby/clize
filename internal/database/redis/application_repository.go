@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/charmingruby/clize/internal/domain/application"
+	"github.com/charmingruby/clize/internal/validation"
 	rq "github.com/charmingruby/clize/pkg/database/redis"
-	"github.com/charmingruby/clize/pkg/errors"
 	rdb "github.com/go-redis/redis/v8"
 )
 
@@ -31,9 +31,8 @@ func (ar *RedisApplicationRepository) FindByKey(key string) (*application.Applic
 	app, err := rq.Get[application.Application](*ar.rc, ar.ctx, key)
 
 	if err != nil {
-		return nil, &errors.ResourceNotFoundError{
-			Entity:  "application",
-			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		return nil, &validation.ResourceNotFoundError{
+			Entity: "application",
 		}
 	}
 
@@ -46,9 +45,8 @@ func (ar *RedisApplicationRepository) FindByName(name string) (*application.Appl
 	app, err := rq.Get[application.Application](*ar.rc, ar.ctx, key)
 
 	if err != nil {
-		return nil, &errors.ResourceNotFoundError{
-			Entity:  "application",
-			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		return nil, &validation.ResourceNotFoundError{
+			Entity: "application",
 		}
 	}
 

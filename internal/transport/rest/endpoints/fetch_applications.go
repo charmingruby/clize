@@ -11,10 +11,22 @@ func NewFetchApplicationsHandler(svc *application.ApplicationService) gin.Handle
 	return func(ctx *gin.Context) {
 		apps, err := svc.FetchApplication()
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, err)
+			res := WrapResponse[error](
+				&err,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		ctx.JSON(http.StatusOK, apps)
+		res := WrapResponse[[]*application.Application](
+			&apps,
+			http.StatusOK,
+			NewFetchedResponse("application", len(apps)),
+		)
+
+		ctx.JSON(http.StatusOK, res)
 	}
 }

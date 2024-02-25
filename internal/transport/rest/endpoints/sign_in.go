@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/profile"
-	"github.com/charmingruby/clize/pkg/errors"
+	"github.com/charmingruby/clize/internal/validation"
+
 	"github.com/charmingruby/clize/pkg/token"
 	"github.com/gin-gonic/gin"
 )
@@ -20,11 +21,16 @@ func NewSignInHandler(svc *profile.ProfileService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req signInRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			err = &errors.InvalidPayloadError{
-				Message:        errors.NewInvalidPayloadErrorMessage(signInRequiredFields),
-				RequiredFields: signInRequiredFields,
-			}
-			ctx.JSON(http.StatusBadRequest, err)
+			errMsg := validation.NewInvalidPayloadErrorMessage(signInRequiredFields)
+			res := WrapResponse[validation.InvalidPayloadError](
+				&validation.InvalidPayloadError{
+					RequiredFields: signInRequiredFields,
+				},
+				http.StatusBadRequest,
+				errMsg,
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 

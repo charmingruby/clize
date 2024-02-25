@@ -1,16 +1,12 @@
 package endpoints
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
+	"github.com/charmingruby/clize/internal/validation"
 	"github.com/gin-gonic/gin"
 )
-
-type deleteApplicationResponse struct {
-	Message string `json:"message"`
-}
 
 func NewDeleteApplicationHandler(svc *application.ApplicationService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -18,14 +14,25 @@ func NewDeleteApplicationHandler(svc *application.ApplicationService) gin.Handle
 
 		err := svc.DeleteApplication(name)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, err)
-			return
+			rnf, ok := err.(*validation.ResourceNotFoundError)
+
+			if !ok {
+				res := WrapResponse[validation.ResourceNotFoundError](
+					rnf,
+					http.StatusNotFound,
+					err.Error(),
+				)
+				ctx.JSON(http.StatusNotFound, res)
+				return
+			}
+
 		}
 
-		successMsg := fmt.Sprintf("%s deleted successfully", name)
-		res := &deleteApplicationResponse{
-			Message: successMsg,
-		}
+		res := WrapResponse[string](
+			nil,
+			http.StatusOK,
+			NewDeletedResponse(name),
+		)
 
 		ctx.JSON(http.StatusOK, res)
 	}

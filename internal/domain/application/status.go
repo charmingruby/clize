@@ -1,6 +1,6 @@
 package application
 
-import "github.com/charmingruby/clize/pkg/errors"
+import "github.com/charmingruby/clize/internal/validation"
 
 const (
 	awaiting = "awaiting"
@@ -20,7 +20,7 @@ func ValidateStatus(sts string) error {
 	isStsValid := allStatus[sts] != ""
 
 	if !isStsValid {
-		return &errors.GenericValidationError{
+		return &validation.GenericValidationError{
 			Message: "Invalid status",
 		}
 	}

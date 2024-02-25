@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/charmingruby/clize/internal/domain/profile"
+	"github.com/charmingruby/clize/internal/validation"
 	rq "github.com/charmingruby/clize/pkg/database/redis"
-	"github.com/charmingruby/clize/pkg/errors"
 	rdb "github.com/go-redis/redis/v8"
 )
 
@@ -33,9 +33,8 @@ func (pr *RedisProfileRepository) FindByEmail(email string) (*profile.Profile, e
 	profile, err := rq.Get[profile.Profile](*pr.rc, pr.ctx, key)
 
 	if err != nil {
-		return nil, &errors.ResourceNotFoundError{
-			Entity:  "profile",
-			Message: errors.NewResourceNotFoundErrorMessage("profile"),
+		return nil, &validation.ResourceNotFoundError{
+			Entity: "profile",
 		}
 	}
 
@@ -48,9 +47,8 @@ func (pr *RedisProfileRepository) FindByUsername(username string) (*profile.Prof
 	profile, err := rq.Get[profile.Profile](*pr.rc, pr.ctx, key)
 
 	if err != nil {
-		return nil, &errors.ResourceNotFoundError{
-			Entity:  "profile",
-			Message: errors.NewResourceNotFoundErrorMessage("profile"),
+		return nil, &validation.ResourceNotFoundError{
+			Entity: "profile",
 		}
 	}
 
@@ -63,9 +61,8 @@ func (pr *RedisProfileRepository) FindById(id string) (*profile.Profile, error) 
 	profile, err := rq.Get[profile.Profile](*pr.rc, pr.ctx, key)
 
 	if err != nil {
-		return nil, &errors.ResourceNotFoundError{
-			Entity:  "profile",
-			Message: errors.NewResourceNotFoundErrorMessage("profile"),
+		return nil, &validation.ResourceNotFoundError{
+			Entity: "profile",
 		}
 	}
 

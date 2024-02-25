@@ -11,10 +11,22 @@ func NewFetchAssignmentsHandler(svc *application.AssignmentService) gin.HandlerF
 	return func(ctx *gin.Context) {
 		assignments, err := svc.FetchAssignment()
 		if err != nil {
-			ctx.Status(http.StatusBadRequest)
+			res := WrapResponse[error](
+				&err,
+				http.StatusBadRequest,
+				err.Error(),
+			)
+
+			ctx.JSON(http.StatusBadRequest, res)
 			return
 		}
 
-		ctx.JSON(http.StatusOK, assignments)
+		res := WrapResponse[[]application.Assignment](
+			&assignments,
+			http.StatusOK,
+			NewFetchedResponse("assignment", len(assignments)),
+		)
+
+		ctx.JSON(http.StatusOK, res)
 	}
 }

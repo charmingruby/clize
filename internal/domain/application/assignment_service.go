@@ -1,8 +1,6 @@
 package application
 
-import (
-	"github.com/charmingruby/clize/pkg/errors"
-)
+import "github.com/charmingruby/clize/internal/validation"
 
 type AssignmentService struct {
 	repo ApplicationRepository
@@ -73,9 +71,8 @@ func (as *AssignmentService) RemoveAssignmentFromApplication(appName, assignment
 	}
 
 	if !assignmentFound {
-		return &errors.ResourceNotFoundError{
-			Entity:  "assignment",
-			Message: errors.NewResourceNotFoundErrorMessage("assignment"),
+		return &validation.ResourceNotFoundError{
+			Entity: "assignment",
 		}
 	}
 
@@ -92,9 +89,8 @@ func (as *AssignmentService) RemoveAssignmentFromApplication(appName, assignment
 func (as *AssignmentService) UpdateAssignment(assignmentTitle, applicationName, title, description string) error {
 	app, err := as.repo.FindByName(applicationName)
 	if err != nil {
-		return &errors.ResourceNotFoundError{
-			Entity:  "application",
-			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		return &validation.ResourceNotFoundError{
+			Entity: "application",
 		}
 	}
 
@@ -110,9 +106,8 @@ func (as *AssignmentService) UpdateAssignment(assignmentTitle, applicationName, 
 	}
 
 	if assignmentToModify == nil {
-		return &errors.ResourceNotFoundError{
-			Entity:  "assignment",
-			Message: errors.NewResourceNotFoundErrorMessage("assignment"),
+		return &validation.ResourceNotFoundError{
+			Entity: "assignment",
 		}
 	}
 
@@ -131,9 +126,8 @@ func (as *AssignmentService) UpdateAssignment(assignmentTitle, applicationName, 
 func (as *AssignmentService) SubmitAssignment(applicationName, assignmentTitle string) error {
 	app, err := as.repo.FindByName(applicationName)
 	if err != nil {
-		return &errors.ResourceNotFoundError{
-			Entity:  "application",
-			Message: errors.NewResourceNotFoundErrorMessage("application"),
+		return &validation.ResourceNotFoundError{
+			Entity: "application",
 		}
 	}
 
@@ -149,9 +143,8 @@ func (as *AssignmentService) SubmitAssignment(applicationName, assignmentTitle s
 	}
 
 	if assignmentToSubmit == nil {
-		return &errors.ResourceNotFoundError{
-			Entity:  "assignment",
-			Message: errors.NewResourceNotFoundErrorMessage("assignment"),
+		return &validation.ResourceNotFoundError{
+			Entity: "assignment",
 		}
 	}
 
