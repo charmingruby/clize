@@ -5,7 +5,6 @@ import (
 
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -22,12 +21,12 @@ func modifyApplication() *cobra.Command {
 		Short: "Modifies an application",
 		Run: func(cmd *cobra.Command, args []string) {
 			if appName == "" {
-				color.Red("app are required")
+				terminal.PrintErrorResponse("application name is required")
 				os.Exit(1)
 			}
 
 			if name == "" && context == "" {
-				color.Red("name and context are required")
+				terminal.PrintErrorResponse("name or context is required")
 				os.Exit(1)
 			}
 
@@ -38,8 +37,8 @@ func modifyApplication() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&appName, "app name", "a", "", "app name")
-	cmd.Flags().StringVarP(&name, "name", "n", "", "name")
+	cmd.Flags().StringVarP(&appName, "app name", "n", "", "app name")
+	cmd.Flags().StringVarP(&name, "name", "m", "", "name")
 	cmd.Flags().StringVarP(&context, "context", "c", "", "context")
 
 	return cmd

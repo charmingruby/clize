@@ -5,7 +5,6 @@ import (
 
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +20,7 @@ func register() *cobra.Command {
 		Short: "Registers a new user",
 		Run: func(cmd *cobra.Command, args []string) {
 			if username == "" && email == "" && password == "" {
-				color.Red("username, email and password are required")
+				terminal.PrintErrorResponse("username, email and password are required")
 				os.Exit(1)
 			}
 

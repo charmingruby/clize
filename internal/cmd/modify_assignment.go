@@ -5,7 +5,6 @@ import (
 
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -23,12 +22,12 @@ func modifyAssignment() *cobra.Command {
 		Short: "Modifies an assignment",
 		Run: func(cmd *cobra.Command, args []string) {
 			if appName == "" && assignmentTitle == "" {
-				color.Red("app name and assignment title are required")
+				terminal.PrintErrorResponse("application name and assignment title are required")
 				os.Exit(1)
 			}
 
 			if title == "" && description == "" {
-				color.Red("title and description are required")
+				terminal.PrintErrorResponse("title and description are required")
 				os.Exit(1)
 			}
 

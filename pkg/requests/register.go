@@ -3,23 +3,16 @@ package requests
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
-	"io"
-	"io/ioutil"
+	"fmt"
 	"net/http"
 
 	terminal "github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 )
 
 type registerInput struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-}
-
-type registerOutput struct {
-	Message string `json:"message"`
 }
 
 func Register(username, email, password string) error {
@@ -40,43 +33,13 @@ func Register(username, email, password string) error {
 		return err
 	}
 
+	data := decodeBody(res.Body)
+
 	if res.StatusCode != http.StatusCreated {
-		return errors.New("unable to create")
+		return fmt.Errorf("%s", data.Message)
 	}
 
-	op, err := decodeRegisterBody(res.Body)
-	if err != nil {
-		return err
-	}
-
-	runRegisterView(op)
+	terminal.PrintSuccessMsgResponse(data.Message)
 
 	return nil
-}
-
-func decodeRegisterBody(body io.ReadCloser) (*registerOutput, error) {
-	defer body.Close()
-	response, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-
-	var parsedResponse registerOutput
-	if err := json.Unmarshal(response, &parsedResponse); err != nil {
-		return nil, err
-	}
-
-	return &parsedResponse, nil
-}
-
-func runRegisterView(op *registerOutput) {
-
-	terminal.Header()
-	terminal.Gap()
-
-	terminal.Padding()
-	color.Green(op.Message)
-
-	terminal.Gap()
-	terminal.Footer()
 }

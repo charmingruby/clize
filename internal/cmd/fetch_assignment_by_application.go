@@ -6,7 +6,6 @@ import (
 
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +22,7 @@ func fetchAssignmentsByApplication() *cobra.Command {
 		Short: "Get all assignments of an application",
 		Run: func(cmd *cobra.Command, args []string) {
 			if name == "" {
-				color.Red("name are required")
+				terminal.PrintErrorResponse("application name is required")
 				os.Exit(1)
 			}
 

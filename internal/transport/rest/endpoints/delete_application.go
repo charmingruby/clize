@@ -16,7 +16,7 @@ func NewDeleteApplicationHandler(svc *application.ApplicationService) gin.Handle
 		if err != nil {
 			rnf, ok := err.(*validation.ResourceNotFoundError)
 
-			if !ok {
+			if ok {
 				res := WrapResponse[validation.ResourceNotFoundError](
 					rnf,
 					http.StatusNotFound,

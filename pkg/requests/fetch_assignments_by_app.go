@@ -1,10 +1,7 @@
 package requests
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"sort"
 
@@ -13,10 +10,6 @@ import (
 	"github.com/charmingruby/clize/pkg/terminal"
 	"github.com/fatih/color"
 )
-
-type fetchAssignmentsByApplicationOutput struct {
-	Assignments []application.Assignment `json:"assignments"`
-}
 
 func FetchAssignmentsByApplication(appName string) error {
 	url := fmt.Sprintf("/applications/assignments/%s", appName)
@@ -27,21 +20,13 @@ func FetchAssignmentsByApplication(appName string) error {
 		return err
 	}
 
-	statusCode := res.StatusCode
-	if statusCode != http.StatusOK {
-		if statusCode == http.StatusNotFound {
-			errRes := decodeNotFoundError(res.Body)
-			terminal.PrintErrorResponse(errRes.Message)
-			return err
-		}
+	data := decodeBodyWithInterface[[]application.Assignment](res.Body)
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s", data.Message)
 	}
 
-	op, err := decodeFetchAssignmentsByAppBody(res.Body)
-	if err != nil {
-		return err
-	}
-
-	runFetchAssignmentsByAppView(appName, op.Assignments)
+	runFetchAssignmentsByAppView(appName, data.Data)
 
 	return nil
 }
@@ -99,21 +84,4 @@ func runFetchAssignmentsByAppView(appName string, assignments []application.Assi
 	terminal.Content(fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone))
 	terminal.Gap()
 	terminal.Footer()
-}
-
-func decodeFetchAssignmentsByAppBody(body io.ReadCloser) (*fetchAssignmentsByApplicationOutput, error) {
-	data, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-
-	var assignments []application.Assignment
-	err = json.Unmarshal(data, &assignments)
-	if err != nil {
-		return nil, err
-	}
-
-	return &fetchAssignmentsByApplicationOutput{
-		Assignments: assignments,
-	}, nil
 }

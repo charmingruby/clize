@@ -5,7 +5,6 @@ import (
 
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +19,7 @@ func deleteApplication() *cobra.Command {
 		Short: "Deletes an application",
 		Run: func(cmd *cobra.Command, args []string) {
 			if name == "" {
-				color.Red("name are required")
+				terminal.PrintErrorResponse("name is required")
 				os.Exit(1)
 			}
 

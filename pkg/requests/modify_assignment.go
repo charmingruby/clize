@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/charmingruby/clize/helpers"
@@ -17,14 +15,10 @@ type modifyAssignmentInput struct {
 	Description string `json:"description"`
 }
 
-type modifyAssignmentOutput struct {
-	Message string `json:"message"`
-}
-
 func ModifyAssignment(appName, assignmentTitle, title, description string) error {
 	inputs := modifyAssignmentInput{
-		Title:       helpers.If[string](title != "", title, ""),
-		Description: helpers.If[string](description != "", description, ""),
+		Title:       helpers.If[string](title != "", fixInputSpacing(title), ""),
+		Description: helpers.If[string](description != "", fixInputSpacing(description), ""),
 	}
 
 	url := fmt.Sprintf("/assignments/%s/%s", appName, assignmentTitle)
@@ -40,40 +34,13 @@ func ModifyAssignment(appName, assignmentTitle, title, description string) error
 		return err
 	}
 
-	statusCode := res.StatusCode
-	if statusCode != http.StatusOK {
-		if statusCode != http.StatusNotFound {
-			errRes := decodeNotFoundError(res.Body)
-			terminal.PrintErrorResponse(errRes.Message)
-			return err
-		}
+	data := decodeBody(res.Body)
 
-		badRequestMsg := fmt.Sprintf("Error modifiying %s in %s", assignmentTitle, appName)
-		terminal.PrintErrorResponse(badRequestMsg)
-		return err
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s", data.Message)
 	}
 
-	op, err := decodeModifyAssignmentBody(res.Body)
-	if err != nil {
-		return err
-	}
-
-	terminal.PrintSuccessMsgResponse(op.Message)
+	terminal.PrintSuccessMsgResponse(data.Message)
 
 	return nil
-}
-
-func decodeModifyAssignmentBody(body io.ReadCloser) (*modifyAssignmentOutput, error) {
-	defer body.Close()
-	result, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-
-	var parsedResponse modifyAssignmentOutput
-	if err := json.Unmarshal(result, &parsedResponse); err != nil {
-		return nil, err
-	}
-
-	return &parsedResponse, nil
 }

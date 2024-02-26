@@ -35,8 +35,6 @@ func Auth(username, password string) error {
 		return err
 	}
 
-	println(res.StatusCode)
-
 	return createTokenCache(res.Body)
 }
 

@@ -36,6 +36,12 @@ func NewFetchAssignmentsByApplication(svc *application.AssignmentService) gin.Ha
 			return
 		}
 
-		ctx.JSON(http.StatusOK, assignments)
+		res := WrapResponse[[]application.Assignment](
+			&assignments,
+			http.StatusOK,
+			NewFetchedResponse("assignment", len(assignments)),
+		)
+
+		ctx.JSON(http.StatusOK, res)
 	}
 }

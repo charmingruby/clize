@@ -5,7 +5,6 @@ import (
 
 	"github.com/charmingruby/clize/pkg/requests"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +20,7 @@ func removeAssignment() *cobra.Command {
 		Short: "Removes an assignment from an application",
 		Run: func(cmd *cobra.Command, args []string) {
 			if appName == "" && assignmentTitle == "" {
-				color.Red("app name and assignment title are required")
+				terminal.PrintErrorResponse("application name and assignment title are required")
 				os.Exit(1)
 			}
 

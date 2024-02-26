@@ -1,10 +1,7 @@
 package requests
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/charmingruby/clize/internal/domain/application"
@@ -13,10 +10,6 @@ import (
 
 type getApplicationInput struct {
 	Name string `json:"name"`
-}
-
-type getApplicationOutput struct {
-	Application application.Application `json:"application"`
 }
 
 func GetApplication(name string) error {
@@ -29,37 +22,15 @@ func GetApplication(name string) error {
 		return err
 	}
 
-	if res.StatusCode == http.StatusNotFound {
-		terminal.PrintNotFoundResponse(name)
-		return err
+	data := decodeBodyWithInterface[application.Application](res.Body)
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s", data.Message)
 	}
 
-	op, err := decodeGetApplicationBody(res.Body)
-	if err != nil {
-		return err
-	}
-
-	runGetApplicationView(&op.Application)
+	runGetApplicationView(&data.Data)
 
 	return nil
-}
-
-func decodeGetApplicationBody(body io.ReadCloser) (*getApplicationOutput, error) {
-	defer body.Close()
-	result, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-
-	var parsedResponse application.Application
-	err = json.Unmarshal(result, &parsedResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	return &getApplicationOutput{
-		Application: parsedResponse,
-	}, nil
 }
 
 func runGetApplicationView(app *application.Application) {

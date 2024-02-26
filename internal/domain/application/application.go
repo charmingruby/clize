@@ -52,10 +52,10 @@ func (a *Application) Validate() error {
 		return &validation.RequiredFieldError{FieldName: "name"}
 	}
 
-	if len(a.Name) < 4 {
+	if len(a.Name) < 2 {
 		return &validation.FieldLengthError{
 			IsMinimumError: true,
-			Quantity:       4,
+			Quantity:       2,
 			FieldName:      "name",
 		}
 	}

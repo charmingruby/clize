@@ -3,8 +3,7 @@ package requests
 import (
 	"bytes"
 	"encoding/json"
-	"io"
-	"io/ioutil"
+	"fmt"
 	"net/http"
 
 	"github.com/charmingruby/clize/pkg/terminal"
@@ -15,15 +14,14 @@ type createApplicationInput struct {
 	Context string `json:"context"`
 }
 
-type createApplicationOutput struct {
-	Message string `json:"message"`
-}
-
 func CreateApplication(name, context string) error {
 	inputs := createApplicationInput{
 		Name:    name,
 		Context: context,
 	}
+
+	inputs.Name = fixInputSpacing(inputs.Name)
+	inputs.Context = fixInputSpacing(inputs.Context)
 
 	var inputBody bytes.Buffer
 	if err := json.NewEncoder(&inputBody).Encode(inputs); err != nil {
@@ -35,27 +33,13 @@ func CreateApplication(name, context string) error {
 		return err
 	}
 
-	op, err := decodeCreateApplicationBody(res.Body)
-	if err != nil {
-		return err
+	data := decodeBody(res.Body)
+
+	if res.StatusCode != http.StatusCreated {
+		return fmt.Errorf("%s", data.Message)
 	}
 
-	terminal.PrintSuccessMsgResponse(op.Message)
+	terminal.PrintSuccessMsgResponse(data.Message)
 
 	return nil
-}
-
-func decodeCreateApplicationBody(body io.ReadCloser) (*createApplicationOutput, error) {
-	defer body.Close()
-	response, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, err
-	}
-
-	var parsedResponse createApplicationOutput
-	if err := json.Unmarshal(response, &parsedResponse); err != nil {
-		return nil, err
-	}
-
-	return &parsedResponse, nil
 }
