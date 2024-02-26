@@ -24,7 +24,7 @@ build-server:
 
 .PHONY: build-cli
 build-cli:
-	go build -o cli cmd/api/main.go
+	go build -o clize cmd/cli/main.go
 
 #####################
 # COMMANDS         #
