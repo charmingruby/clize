@@ -1,6 +1,13 @@
 #####################
 # SERVER           #
 #####################
+.PHONY: install
+install:
+	sudo sh install.sh
+
+#####################
+# SERVER           #
+#####################
 .PHONY: server
 server:
 	go run cmd/api/main.go

@@ -1,6 +1,8 @@
 echo "Building the application..."
 make build-cli
 
+cp .env /usr/bin/
+
 echo "Moving the binary to /usr/local/bin"
 mv clize /usr/bin/clize
 
