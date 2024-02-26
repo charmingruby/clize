@@ -15,6 +15,9 @@ test:
 #####################
 # BUILD            #
 #####################
+.PHONY: build
+build: build-server build-cli
+
 .PHONY: build-server
 build-server:
 	go build -o api cmd/api/main.go
