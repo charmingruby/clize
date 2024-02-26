@@ -15,6 +15,7 @@ import (
 func doRequest(
 	method, path string, body io.Reader, auth bool,
 ) (*http.Response, error) {
+	// Comment this block to install
 	if err := godotenv.Load(); err != nil {
 		terminal.PrintErrorResponse(".env don't exists")
 		os.Exit(1)
@@ -26,7 +27,9 @@ func doRequest(
 		terminal.PrintErrorResponse("SERVER_URL not found on .env")
 		os.Exit(1)
 	}
+	//
 
+	// Change the server URL to the current server url and run make install
 	url := fmt.Sprintf("%s%s", serverUrl, path)
 
 	req, err := http.NewRequest(method, url, body)

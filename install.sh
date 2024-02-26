@@ -1,7 +1,8 @@
+
+# Before running this script, should follow the instructions in ./pkg/requests/request.go
+
 echo "Building the application..."
 make build-cli
-
-cp .env /usr/bin/
 
 echo "Moving the binary to /usr/local/bin"
 mv clize /usr/bin/clize
