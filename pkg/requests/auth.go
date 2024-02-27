@@ -54,7 +54,7 @@ func createTokenCache(body io.ReadCloser) error {
 		fmt.Println(err)
 	}
 
-	file, err := os.Create(".cacheToken")
+	file, err := os.Create("@clize_cacheToken")
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func createTokenCache(body io.ReadCloser) error {
 }
 
 func readCacheToken() (string, error) {
-	data, err := os.ReadFile(".cacheToken")
+	data, err := os.ReadFile("@clize_cacheToken")
 	if err != nil {
 		return "", err
 	}

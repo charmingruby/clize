@@ -10,4 +10,4 @@ clize
 todo.md
 
 # cached auth token
-.cacheToken
+@clize_cacheToken
