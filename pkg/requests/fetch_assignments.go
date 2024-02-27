@@ -36,8 +36,10 @@ func runFetchAssignmentsView(assignments []application.Assignment) {
 	terminal.Gap()
 
 	if totalAssignments == 0 {
-		terminal.Padding()
-		//terminal.boldGreen.Printf("No assignments.\n")
+		terminal.Content(
+			"No assignments.",
+			"success",
+		)
 
 		terminal.Gap()
 		terminal.Footer()

@@ -25,6 +25,18 @@ func FetchApplications() error {
 func runFetchApplicationsView(apps []application.Application) {
 	terminal.Header()
 	terminal.Gap()
+
+	if len(apps) == 0 {
+		terminal.Content(
+			"No applications.",
+			"success",
+		)
+
+		terminal.Gap()
+		terminal.Footer()
+		return
+	}
+
 	terminal.Title("Applications")
 	terminal.Gap()
 
