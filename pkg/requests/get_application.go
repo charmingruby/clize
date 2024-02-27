@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/charmingruby/clize/helpers"
 	"github.com/charmingruby/clize/internal/domain/application"
 	"github.com/charmingruby/clize/pkg/terminal"
 )
@@ -34,51 +35,30 @@ func GetApplication(name string) error {
 }
 
 func runGetApplicationView(app *application.Application) {
-
 	terminal.Header()
 	terminal.Gap()
-	terminal.Title(app.Name)
+
+	terminal.ContentKeyValue("ID", app.ID)
+	terminal.ContentKeyValue("Name", app.Name)
+	terminal.ContentKeyValue("Context", app.Context)
+	terminal.ContentKeyValue("Active assignments", fmt.Sprintf("%d", len(app.Assignments)))
+	terminal.ContentKeyValue("Created at", app.CreatedAt.Format("2006/01/02"))
+
+	terminal.Gap()
+	terminal.Content("Assignments: ", "white")
 	terminal.Gap()
 
-	terminal.Content(fmt.Sprintf("ID: %s", app.ID))
-	terminal.Content(fmt.Sprintf("Context: %s", app.Context))
-	terminal.Content(fmt.Sprintf("Status: %s", app.Status))
-	terminal.Content(fmt.Sprintf("CreatedAt: %s", app.CreatedAt.Format("2006/01/02")))
-
-	terminal.Content("Assignments: ")
-	terminal.Content("[")
-
 	for _, a := range app.Assignments {
-		terminal.Padding()
-		terminal.Tab(1)
-		fmt.Println("{")
+		isDone := a.Status == "done"
+		statusMarker := helpers.If[string](isDone, "[x]", "[ ]")
 
-		terminal.Padding()
-		terminal.Tab(2)
-		fmt.Printf("ID: %s\n", a.ID)
+		if !isDone {
+			terminal.Content(fmt.Sprintf("\t%s %s", statusMarker, a.Title), "danger")
+			continue
+		}
 
-		terminal.Padding()
-		terminal.Tab(2)
-		fmt.Printf("Title: %s\n", a.Title)
-
-		terminal.Padding()
-		terminal.Tab(2)
-		fmt.Printf("Description: %s\n", a.Description)
-
-		terminal.Padding()
-		terminal.Tab(2)
-		fmt.Printf("Status: %s\n", a.Status)
-
-		terminal.Padding()
-		terminal.Tab(2)
-		fmt.Printf("CreatedAt: %s\n", a.CreatedAt.Format("2006/01/02"))
-
-		terminal.Padding()
-		terminal.Tab(1)
-		fmt.Println("},")
+		terminal.Content(fmt.Sprintf("\t%s %s", statusMarker, a.Title), "success")
 	}
-
-	terminal.Content("]")
 
 	terminal.Gap()
 	terminal.Footer()

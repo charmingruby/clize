@@ -38,7 +38,7 @@ func NewSubmitAssignmentHandler(svc *application.AssignmentService) gin.HandlerF
 			return
 		}
 
-		msg := fmt.Sprintf("%s: %s submitted successfully", appName, assignmentTitle)
+		msg := fmt.Sprintf("\"%s\": \"%s\" submitted successfully", appName, assignmentTitle)
 
 		res := WrapResponse[string](
 			nil,

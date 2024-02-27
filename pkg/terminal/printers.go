@@ -4,12 +4,20 @@ import "github.com/fatih/color"
 
 var white = color.New(color.FgWhite)
 
-var BoldWhite = white.Add(color.Bold)
+var boldWhite = white.Add(color.Bold)
+
+var lightenGreen = color.New(color.FgGreen)
 
 var green = color.New(color.FgGreen)
 
-var BoldGreen = green.Add(color.Bold)
+var boldGreen = green.Add(color.Bold)
+
+var lightenRed = color.New(color.FgRed)
 
 var red = color.New(color.FgRed)
 
-var BoldRed = red.Add(color.Bold)
+var boldRed = red.Add(color.Bold)
+
+var yellow = color.New(color.FgYellow)
+
+var boldYellow = yellow.Add(color.Bold)

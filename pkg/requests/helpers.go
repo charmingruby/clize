@@ -2,6 +2,7 @@ package requests
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"strings"
@@ -42,4 +43,28 @@ func decodeBodyWithInterface[v any](body io.ReadCloser) *genericResponse[v] {
 func fixInputSpacing(input string) string {
 	input = strings.ReplaceAll(input, "_", " ")
 	return input
+}
+
+func makeExcerpt(content string) string {
+	chunkSize := 20
+
+	var chunks []string
+
+	if len(content) < chunkSize {
+		return content
+	}
+
+	for i := 0; i < chunkSize; i += chunkSize {
+		end := i + chunkSize
+
+		if i == 17 {
+			break
+		}
+
+		chunks = append(chunks, content[i:end])
+	}
+
+	formattedResult := strings.Join(chunks, "")
+
+	return fmt.Sprintf("%s...", formattedResult)
 }

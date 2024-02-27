@@ -8,7 +8,6 @@ import (
 	"github.com/charmingruby/clize/helpers"
 	"github.com/charmingruby/clize/internal/domain/application"
 	"github.com/charmingruby/clize/pkg/terminal"
-	"github.com/fatih/color"
 )
 
 func FetchAssignmentsByApplication(appName string) error {
@@ -41,7 +40,10 @@ func runFetchAssignmentsByAppView(appName string, assignments []application.Assi
 
 	if totalAssignments == 0 {
 		terminal.Padding()
-		terminal.BoldGreen.Printf("No assignments.\n")
+		terminal.Content(
+			"No assignments.",
+			"success",
+		)
 
 		terminal.Gap()
 		terminal.Footer()
@@ -67,21 +69,46 @@ func runFetchAssignmentsByAppView(appName string, assignments []application.Assi
 		status := helpers.If[string](isAssignmentDone, "[x]", "[ ]")
 
 		if isAssignmentDone {
-			terminal.Padding()
-			color.Green("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreatedAt.Format("2006/01/02"))
+			terminal.Content(
+				fmt.Sprintf("%d. %s %s (%s)", idx+1, status, a.Title, a.CreatedAt.Format("2006/01/02")),
+				"lsuccess",
+			)
+			terminal.Content(
+				fmt.Sprintf("\t -> %s", a.Description),
+				"",
+			)
 
 			amountOfAssignmentsDone++
+			terminal.Gap()
 			continue
 		}
 
-		terminal.Padding()
-		color.Red("%d. %s %s: %s (%s)", idx+1, status, a.ID, a.Title, a.CreatedAt.Format("2006/01/02"))
-
+		terminal.Content(
+			fmt.Sprintf("%d. %s %s (%s)", idx+1, status, a.Title, a.CreatedAt.Format("2006/01/02")),
+			"ldanger",
+		)
+		terminal.Content(
+			fmt.Sprintf("\t -> %s", a.Description),
+			"",
+		)
+		terminal.Gap()
 	}
+
+	isCompleted := amountOfAssignmentsDone == totalAssignments
 	percentageOfAssignmentsDone := (float64(amountOfAssignmentsDone) / float64(totalAssignments)) * 100
 
-	terminal.Gap()
-	terminal.Content(fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone))
+	if !isCompleted {
+		terminal.Content(
+			fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone),
+			"",
+		)
+	} else {
+		terminal.Content(
+			fmt.Sprintf("%d of %d is done (%.2f%%)", amountOfAssignmentsDone, totalAssignments, percentageOfAssignmentsDone),
+			"success",
+		)
+	}
+
 	terminal.Gap()
 	terminal.Footer()
 }

@@ -57,3 +57,5 @@ func (js *jwtService) ValidateToken(token string) bool {
 
 	return err == nil
 }
+
+func RetriveSubValues(token string) {}

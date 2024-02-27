@@ -1,29 +1,22 @@
 package terminal
 
-import "github.com/fatih/color"
+import "fmt"
 
 func PrintServerError() {
-	print(LimitatorPattern())
-	color.Red("Server is closed")
+	Content(
+		"Server is closed",
+		"danger",
+	)
 }
 
 func PrintErrorResponse(msg string) {
 	Header()
 	Gap()
 
-	Padding()
-	BoldRed.Printf("❌ %s\n", msg)
-
-	Gap()
-	Footer()
-}
-
-func PrintNotFoundResponse(identifier string) {
-	Header()
-	Gap()
-
-	Padding()
-	BoldRed.Printf("%s not found\n", identifier)
+	Content(
+		fmt.Sprintf("❌ %s", msg),
+		"danger",
+	)
 
 	Gap()
 	Footer()
@@ -33,8 +26,10 @@ func PrintSuccessMsgResponse(msg string) {
 	Header()
 	Gap()
 
-	Padding()
-	BoldGreen.Printf("✅ %s\n", msg)
+	Content(
+		fmt.Sprintf("✅ %s", msg),
+		"success",
+	)
 
 	Gap()
 	Footer()
