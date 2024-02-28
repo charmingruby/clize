@@ -36,7 +36,6 @@ type Assignment struct {
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	Status      string     `json:"status"`
-	CreatedBy   string     `json:"created_by"`
 	SignedBy    string     `json:"signed_by,omitempty"`
 	CreatedAt   time.Time  `json:"create_at"`
 	SolvedAt    *time.Time `json:"solved_at,omitempty"`
