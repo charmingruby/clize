@@ -11,7 +11,6 @@ func TestAssignmentJSONSerialization(t *testing.T) {
 	assignment, err := NewAssignment(
 		"get endpoint broken",
 		"fix the GET application endpoint",
-		"gustavo",
 	)
 
 	assert.NoError(t, err)

@@ -12,9 +12,9 @@ func NewAssignmentService(repo ApplicationRepository) *AssignmentService {
 	}
 }
 
-func (as *AssignmentService) AddAssignment(applicationName, title, description, createdBy string) error {
+func (as *AssignmentService) AddAssignment(applicationName, title, description string) error {
 	newAssignment, err := NewAssignment(
-		title, description, createdBy,
+		title, description,
 	)
 	if err != nil {
 		return err

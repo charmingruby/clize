@@ -9,7 +9,7 @@ import (
 	"github.com/charmingruby/clize/pkg/uuid"
 )
 
-func NewAssignment(title, description, createdBy string) (*Assignment, error) {
+func NewAssignment(title, description string) (*Assignment, error) {
 	sts := Status()
 
 	formattedTitle := formatTitle(title)
@@ -18,7 +18,6 @@ func NewAssignment(title, description, createdBy string) (*Assignment, error) {
 		ID:          uuid.GenerateUUID(),
 		Title:       formattedTitle,
 		Description: description,
-		CreatedBy:   createdBy,
 		Status:      sts["awaiting"],
 		CreatedAt:   time.Now(),
 		SignedBy:    "",

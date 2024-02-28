@@ -34,10 +34,7 @@ func NewAddAssignmentHandler(svc *application.AssignmentService) gin.HandlerFunc
 			return
 		}
 
-		// TODO: handle with session value
-		createdBy := "static profile"
-
-		if err := svc.AddAssignment(applicationName, req.Title, req.Description, createdBy); err != nil {
+		if err := svc.AddAssignment(applicationName, req.Title, req.Description); err != nil {
 			rnf, ok := err.(*validation.ResourceNotFoundError)
 			if ok {
 				res := WrapResponse[validation.ResourceNotFoundError](
